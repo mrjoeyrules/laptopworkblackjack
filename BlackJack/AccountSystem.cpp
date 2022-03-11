@@ -28,6 +28,7 @@ struct CurrentAccounts
 
 void AccountSystem::LogIn()
 {
+	Account account;
 	string attemptedUsername;
 	int attemptedPasscode;
 	bool loopControl = true;
@@ -53,7 +54,7 @@ void AccountSystem::LogIn()
 		}
 		for (size_t i = 0; i < count; i++)
 		{
-			Account account;
+			
 			accountFile>>account.username>>account.passcode>>account.chipBalance;
 			accounts.push_back(account);
 		}
@@ -74,31 +75,33 @@ void AccountSystem::LogIn()
 				cout << "Please Enter your Username: \n";
 				cin >> attemptedUsername;
 				attemptedPasscode = val.intValidation("Please Enter your Passcode:");
-				for (size_t i = 0; i < count; i++)
+				int z = 0;
+				bool isCorrect = false;
+				while (z < count)
 				{
-					CurrentAccounts currentDetails;
-					currentDetails.currentUsername = accounts[i].username;
-					currentDetails.currentPasscode = accounts[i].passcode;
-					currentAccounts.push_back(currentDetails);
-					
-				}
-				for (size_t i = 0; i < count; i++)
-				{
-					if (attemptedUsername == currentAccounts[i].currentUsername && attemptedPasscode == currentAccounts[i].currentPasscode)
+					if (attemptedUsername == accounts[z].username && attemptedPasscode == accounts[z].passcode)
 					{
-						i = count;
-						cout << "Welcome to the casino {" << currentAccounts[i].currentUsername << "}!" << endl;
+						cout << "Welcome to the casino {" << attemptedUsername << "}!" << endl;
 						loopControl2 = false;
 						loopControl = false;
+						isCorrect = true;
+						z = count + 1;
 					}
 					else
 					{
-						continue;
+						z++;
 					}
 				}
-				logInAttempts++;
-				cout << "Username or password is incorrect try again" << endl;
-				cout << "You have " << logInMax - logInAttempts << " attempts left" << endl;
+				if (isCorrect == true)
+				{
+					cout << "You got it working" << endl;
+				}
+				else
+				{
+					logInAttempts++;
+					cout << "Username or password is incorrect try again" << endl;
+					cout << "You have " << logInMax - logInAttempts << " attempts left" << endl;
+				}
 			}
 		}
 	}
@@ -181,7 +184,7 @@ void AccountSystem::AccountCreator()
 	int baseBalance = 25000;
 	ofstream fileOutput;
 	fileOutput.open("AccountInfo.txt", std::ios_base::app);
-	fileOutput << "\n" << newUsername << " " << newPasscode << " " << baseBalance << endl;
+	fileOutput << newUsername << " " << newPasscode << " " << baseBalance << endl;
 	cout << "Account created enjoy! Please log in with your details!" << endl;
 	mm.mainMenu();
 	
