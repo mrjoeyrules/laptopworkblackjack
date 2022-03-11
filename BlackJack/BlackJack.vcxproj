@@ -143,6 +143,7 @@
     <ClCompile Include="AccountSystem.cpp" />
     <ClCompile Include="CustomMath.cpp" />
     <ClCompile Include="FileSystem.cpp" />
+    <ClCompile Include="Game.cpp" />
     <ClCompile Include="MainMenu.cpp" />
     <ClCompile Include="Validation.cpp" />
   </ItemGroup>
@@ -150,6 +151,7 @@
     <ClInclude Include="AccountSystem.h" />
     <ClInclude Include="CustomMath.h" />
     <ClInclude Include="FileSystem.h" />
+    <ClInclude Include="Game.h" />
     <ClInclude Include="MainMenu.h" />
     <ClInclude Include="Validation.h" />
   </ItemGroup>

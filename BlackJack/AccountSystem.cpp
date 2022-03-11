@@ -7,10 +7,12 @@
 #include "Validation.h"
 #include "CustomMath.h"
 #include "MainMenu.h"
+#include "Game.h"
 using namespace std;
 Validation val;
 MainMenu mm;
 CustomMath cusMath;
+Game game;
 ifstream accountFile("AccountInfo.txt");
 
 struct Account
@@ -94,7 +96,7 @@ void AccountSystem::LogIn()
 				}
 				if (isCorrect == true)
 				{
-					cout << "You got it working" << endl;
+					game.Welcome();
 				}
 				else
 				{
