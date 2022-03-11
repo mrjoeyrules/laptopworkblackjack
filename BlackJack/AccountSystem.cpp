@@ -5,8 +5,10 @@
 #include "AccountSystem.h"
 #include "FileSystem.h"
 #include "Validation.h"
+#include "CustomMath.h"
 using namespace std;
 Validation val;
+CustomMath cusMath;
 ifstream accountFile("AccountInfo.txt");
 
 struct Account
@@ -40,8 +42,6 @@ void AccountSystem::LogIn()
 	accountFile.close();
 	ifstream accountFile("AccountInfo.txt");
 	std::vector<Account> accounts;
-	//accounts.push_back(count);
-	//Account arrayAccounts[accountNum];
 	while (loopControl)
 	{
 		if (!accountFile)
@@ -100,13 +100,22 @@ void AccountSystem::LogIn()
 	
 }
 
+
+
 void AccountSystem::AccountCreator()
 {
 	ifstream accountFile("AccountInfo.txt");
+	Account account;
 	bool loopControl = true;
 	cout << "Welcome to the account creation center!" << endl;
+	string newUsername;
+	int newPasscode;
 	while (loopControl)
 	{
-		
+		cout << "The first step of creating an account is to choose a username!" << endl;
+		cout << "Please enter a username: \n";
+		cin >> newUsername;
+		newPasscode = val.intValidation("Please enter a new passcode! Your passcode must be 4 digits long:\n");
+
 	}
 }
