@@ -6,8 +6,10 @@
 #include "FileSystem.h"
 #include "Validation.h"
 #include "CustomMath.h"
+#include "MainMenu.h"
 using namespace std;
 Validation val;
+MainMenu mm;
 CustomMath cusMath;
 ifstream accountFile("AccountInfo.txt");
 
@@ -78,22 +80,25 @@ void AccountSystem::LogIn()
 					currentDetails.currentUsername = accounts[i].username;
 					currentDetails.currentPasscode = accounts[i].passcode;
 					currentAccounts.push_back(currentDetails);
-					//string currentUsername = accounts[i].username;
-					//int currentPasscode = accounts[i].passcode;
+					
+				}
+				for (size_t i = 0; i < count; i++)
+				{
 					if (attemptedUsername == currentAccounts[i].currentUsername && attemptedPasscode == currentAccounts[i].currentPasscode)
 					{
+						i = count;
 						cout << "Welcome to the casino {" << currentAccounts[i].currentUsername << "}!" << endl;
 						loopControl2 = false;
 						loopControl = false;
-						i = count;
 					}
 					else
 					{
-						logInAttempts++;
-						cout << "Username or password is incorrect try again" << endl;
-						cout << "You have " << logInMax - logInAttempts << " attempts left" << endl;
+						continue;
 					}
 				}
+				logInAttempts++;
+				cout << "Username or password is incorrect try again" << endl;
+				cout << "You have " << logInMax - logInAttempts << " attempts left" << endl;
 			}
 		}
 	}
@@ -105,17 +110,79 @@ void AccountSystem::LogIn()
 void AccountSystem::AccountCreator()
 {
 	ifstream accountFile("AccountInfo.txt");
+	int count = 0;
+	if (accountFile.is_open())
+	{
+		string line;
+		while (!accountFile.eof())
+		{
+			getline(accountFile, line);
+			count++;
+		}
+	}
+	accountFile.close();
+	ifstream accountFile2("AccountInfo.txt");
+	std::vector<Account> preAccounts;
 	Account account;
+	for (size_t i = 0; i < count; i++)
+	{
+		accountFile2 >> account.username >> account.passcode >> account.chipBalance;
+		preAccounts.push_back(account);
+	}
+	accountFile2.close();
+	int const passcodeLenReq = 4;
 	bool loopControl = true;
 	cout << "Welcome to the account creation center!" << endl;
 	string newUsername;
 	int newPasscode;
 	while (loopControl)
 	{
+		int innerCount = count;
 		cout << "The first step of creating an account is to choose a username!" << endl;
 		cout << "Please enter a username: \n";
 		cin >> newUsername;
-		newPasscode = val.intValidation("Please enter a new passcode! Your passcode must be 4 digits long:\n");
-
+		bool passCodeLoop = true;
+		while (passCodeLoop)
+		{
+			newPasscode = val.intValidation("Please enter a new passcode! Your passcode must be 4 digits long:\n");
+			int passcodeLen = cusMath.countDigit(newPasscode);
+			if (passcodeLen != passcodeLenReq)
+			{
+				cout << "Your passcode must be " << passcodeLenReq << " digits long! Please try again" << endl;
+			}
+			else
+			{
+				passCodeLoop = false;
+			}
+		}
+		bool isFail = false;
+		for (size_t i = 0; i < innerCount; i++)
+		{
+			if (newUsername == preAccounts[i].username)
+			{
+				cout << "You cannot use this username as it is already in use, Please try again!" << endl;
+				i = innerCount;
+				isFail = true;
+			}
+			else
+			{
+				continue;
+			}
+		}
+		if (isFail == true)
+		{
+			continue;
+		}
+		else
+		{
+			loopControl = false;
+		}
 	}
+	int baseBalance = 25000;
+	ofstream fileOutput;
+	fileOutput.open("AccountInfo.txt", std::ios_base::app);
+	fileOutput << "\n" << newUsername << " " << newPasscode << " " << baseBalance << endl;
+	cout << "Account created enjoy! Please log in with your details!" << endl;
+	mm.mainMenu();
+	
 }
