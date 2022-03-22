@@ -16,19 +16,13 @@ ifstream accountFile("AccountInfo.txt");
 struct Account
 {
 	string username;
-	int passcode;
-	int chipBalance;
-};
-
-struct CurrentAccounts
-{
-	string currentUsername;
-	int currentPasscode;
+	int passcode = 0000;
+	int chipBalance = 0000;
 };
 
 void AccountSystem::LogIn()
 {
-	Account account;
+	
 	string attemptedUsername;
 	int attemptedPasscode;
 	bool loopControl = true;
@@ -54,8 +48,8 @@ void AccountSystem::LogIn()
 		}
 		for (size_t i = 0; i < count; i++)
 		{
-			
-			accountFile>>account.username>>account.passcode>>account.chipBalance;
+			Account account;
+			accountFile >> account.username >> account.passcode >> account.chipBalance;
 			accounts.push_back(account);
 		}
 		int logInAttempts = 0;
@@ -71,7 +65,6 @@ void AccountSystem::LogIn()
 			}
 			else
 			{
-				std::vector<CurrentAccounts> currentAccounts;
 				cout << "Please Enter your Username: \n";
 				cin >> attemptedUsername;
 				attemptedPasscode = val.intValidation("Please Enter your Passcode:");
@@ -85,7 +78,7 @@ void AccountSystem::LogIn()
 						loopControl2 = false;
 						loopControl = false;
 						isCorrect = true;
-						z = count + 1;
+						break;
 					}
 					else
 					{
