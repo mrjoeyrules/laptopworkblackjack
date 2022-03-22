@@ -7,9 +7,11 @@
 #include "Validation.h"
 #include "CustomMath.h"
 #include "MainMenu.h"
+#include "Game.h"
 using namespace std;
 Validation val;
 MainMenu mm;
+Game game;
 CustomMath cusMath;
 ifstream accountFile("AccountInfo.txt");
 
@@ -87,7 +89,7 @@ void AccountSystem::LogIn()
 				}
 				if (isCorrect == true)
 				{
-					cout << "You got it working" << endl;
+					game.defineDeck();
 				}
 				else
 				{

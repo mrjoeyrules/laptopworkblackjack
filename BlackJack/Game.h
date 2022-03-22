@@ -6,9 +6,11 @@
 using namespace std;
 class Game
 {
-public:
-	void shuffleCards();
+private:
+	void dealCards();
 	void playRound();
 	void defineDeck();
+public:
+	void startGame(string username, int chipBal);
 };
 #endif
