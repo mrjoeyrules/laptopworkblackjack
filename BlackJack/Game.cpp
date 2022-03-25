@@ -12,9 +12,16 @@ int dealerCurrentCount = 0;
 int const MaxCardsPerDeck = 13;
 int const MaxCardsPerDeckAce = 14;
 int const MaxDecks = 4;
+int const MaxHouses = 4;
+int totalOfCardsDeck1 = 13;
+int totalOfCardsDeck2 = 13;
+int totalOfCardsDeck3 = 13;
+int totalOfCardsDeck4 = 13;
 string playerUserName;
+Validation val;
 int playerChipBal;
 int cardValue[MaxCardsPerDeckAce] = { 1,2,3,4,5,6,7,8,9,10,10,10,11 };
+string houses[MaxHouses] = { "Hearts", "Diamonds", "Clubs", "Spades" };
 struct Decks
 {
 	std::vector<string> decks;
@@ -31,93 +38,137 @@ void Game::defineDeck()
 	}	
 }
 
-void Game::dealCards()
+int Game::dealCards(int* cardValueInner, int*currentDeck)
 {
 	bool loopControl = true;
 	int randomDeck = 0;
-	int cardValueInner;
 	int randomCard = 0;
-	int currentDeck = 0;
 	int currentCard = 0;
-	int totalOfCardsDeck1 = 13;
-	int totalOfCardsDeck2 = 13;
-	int totalOfCardsDeck3 = 13;
-	int totalOfCardsDeck4 = 13;
 	while (loopControl)
 	{
-		randomDeck = rand() % 4;
-		randomCard = rand() % 12;
+		if (totalOfCardsDeck1 == 0)
+		{
+			randomDeck = rand() % 3 + 1;
+			randomCard = rand() % totalOfCardsDeck1 - 1;
+		}
+		else if (totalOfCardsDeck2 == 0)
+		{
+			int possibleDecks[3] = { 0,2,3 };
+			int partRandom = rand() % 2;
+			randomDeck = possibleDecks[partRandom];
+			randomCard = rand() % totalOfCardsDeck2 - 1;
+		}
+		else if (totalOfCardsDeck3 == 0)
+		{
+			int possibleDecks[3] = { 0,1,3 };
+			int partRandom = rand() % 2;
+			randomDeck = possibleDecks[partRandom];
+			randomCard = rand() % totalOfCardsDeck3 - 1;
+		}
+		else if (totalOfCardsDeck4 == 0)
+		{
+			int possibleDecks[3] = { 0,1,2 };
+			int partRandom = rand() % 2;
+			randomDeck = possibleDecks[partRandom];
+			randomCard = rand() % totalOfCardsDeck4 - 1;
+		}
+		else
+		{
+			randomDeck = rand() % 4;
+			if (randomDeck == 0)
+			{
+				randomCard = rand() % totalOfCardsDeck1 - 1;
+			}
+			else if (randomDeck == 1)
+			{
+				randomCard = rand() % totalOfCardsDeck2 - 1;
+			}
+			else if (randomDeck == 2)
+			{
+				randomCard = rand() % totalOfCardsDeck3 - 1;
+			}
+			else if (randomDeck == 3)
+			{
+				randomCard = rand() % totalOfCardsDeck4 - 1;
+			}
+		}
 		if (randomCard == 0)
 		{
 			if (playerCurrentCount < 11)
 			{
-				cardValueInner = cardValue[12];
-				currentDeck = randomDeck;
+				*cardValueInner = cardValue[12];
+				*currentDeck = randomDeck;
 				currentCard = randomCard;
-				deckMaker[currentDeck].decks.erase(deckMaker[currentDeck].decks.begin()+currentCard - 1);
-				if (currentDeck == 0)
+				deckMaker[*currentDeck].decks.erase(deckMaker[*currentDeck].decks.begin()+currentCard - 1);
+				if (*currentDeck == 0)
 				{
 					totalOfCardsDeck1 -= 1;
 				}
-				else if (currentDeck == 1)
+				else if (*currentDeck == 1)
 				{
 					totalOfCardsDeck2 -= 1;
 				}
-				else if (currentDeck == 2)
+				else if (*currentDeck == 2)
 				{
 					totalOfCardsDeck3 -= 1;
 				}
-				else if (currentDeck == 3)
+				else if (*currentDeck == 3)
 				{
 					totalOfCardsDeck4 -= 1;
 				}
+				return *cardValueInner, *currentDeck;
+				loopControl = false;
 			}
 			else
 			{
-				cardValueInner = cardValue[randomCard];
-				currentDeck = randomDeck;
+				*cardValueInner = cardValue[randomCard];
+				*currentDeck = randomDeck;
 				currentCard = randomCard;
-				deckMaker[currentDeck].decks.erase(deckMaker[currentDeck].decks.begin() + currentCard - 1);
-				if (currentDeck == 0)
+				deckMaker[*currentDeck].decks.erase(deckMaker[*currentDeck].decks.begin() + currentCard - 1);
+				if (*currentDeck == 0)
 				{
 					totalOfCardsDeck1 -= 1;
 				}
-				else if (currentDeck == 1)
+				else if (*currentDeck == 1)
 				{
 					totalOfCardsDeck2 -= 1;
 				}
-				else if (currentDeck == 2)
+				else if (*currentDeck == 2)
 				{
 					totalOfCardsDeck3 -= 1;
 				}
-				else if (currentDeck == 3)
+				else if (*currentDeck == 3)
 				{
 					totalOfCardsDeck4 -= 1;
 				}
+				return *cardValueInner, *currentDeck;
+				loopControl = false;
 			}
 		}
 		else
 		{
-			cardValueInner = cardValue[randomCard];
-			currentDeck = randomDeck;
+			*cardValueInner = cardValue[randomCard];
+			*currentDeck = randomDeck;
 			currentCard = randomCard;
-			deckMaker[currentDeck].decks.erase(deckMaker[currentDeck].decks.begin() + currentCard - 1);
-			if (currentDeck == 0)
+			deckMaker[*currentDeck].decks.erase(deckMaker[*currentDeck].decks.begin() + currentCard - 1);
+			if (*currentDeck == 0)
 			{
 				totalOfCardsDeck1 -= 1;
 			}
-			else if (currentDeck == 1)
+			else if (*currentDeck == 1)
 			{
 				totalOfCardsDeck2 -= 1;
 			}
-			else if (currentDeck == 2)
+			else if (*currentDeck == 2)
 			{
 				totalOfCardsDeck3 -= 1;
 			}
-			else if (currentDeck == 3)
+			else if (*currentDeck == 3)
 			{
 				totalOfCardsDeck4 -= 1;
 			}
+			return *cardValueInner, *currentDeck;
+			loopControl = false;
 		}
 
 	}
@@ -126,7 +177,44 @@ void Game::dealCards()
 
 void Game::playRound()
 {
+	playerCurrentCount = 0;
+	dealerCurrentCount = 0;
+	int roundBet = 0;
+	bool betValidation = true;
+	while (betValidation)
+	{
+		roundBet = val.intValidation("Please enter your wager for this round of BlackJack: \n");
+		if (roundBet > playerChipBal)
+		{
+			cout << "You cannot bet more chips than you have! You have " << playerChipBal << "chips!" << endl;
+		}
+		else
+		{
+			betValidation = false;
+		}
+	}
+	reshuffleCards();
+	int currentPlayerCard;
+	int currentCardHouse;
+	dealCards(&currentPlayerCard, &currentCardHouse);
+	playerCurrentCount = cardValue[currentPlayerCard];
+	string cardValueName = deckMaker[currentCardHouse].decks[currentPlayerCard];
+	string currentHouse = houses[currentCardHouse];
+	cout << "You have been dealt a " << cardValueName << " of " << currentHouse << endl;
+	cout << "Your count is " << playerCurrentCount << endl;
+	
 
+	
+	
+}
+
+void Game::reshuffleCards()
+{
+	totalOfCardsDeck1 = 13;
+	totalOfCardsDeck2 = 13;
+	totalOfCardsDeck3 = 13;
+	totalOfCardsDeck4 = 13;
+	defineDeck();
 }
 
 void Game::startGame(string username, int chipBal)
@@ -134,4 +222,5 @@ void Game::startGame(string username, int chipBal)
 	playerUserName = username;
 	playerChipBal = chipBal;
 	defineDeck();
+
 }

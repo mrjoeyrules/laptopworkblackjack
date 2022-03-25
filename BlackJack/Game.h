@@ -7,8 +7,9 @@ using namespace std;
 class Game
 {
 private:
-	void dealCards();
+	int dealCards(int* cardValueInner, int* currentDeck);
 	void playRound();
+	void reshuffleCards();
 	void defineDeck();
 public:
 	void startGame(string username, int chipBal);

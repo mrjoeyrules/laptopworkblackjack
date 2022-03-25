@@ -89,7 +89,7 @@ void AccountSystem::LogIn()
 				}
 				if (isCorrect == true)
 				{
-					game.defineDeck();
+					game.startGame(accounts[z].username, accounts[z].chipBalance);
 				}
 				else
 				{
