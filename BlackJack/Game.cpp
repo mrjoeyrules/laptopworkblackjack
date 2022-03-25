@@ -37,6 +37,12 @@ void Game::dealCards()
 	int randomDeck = 0;
 	int cardValueInner;
 	int randomCard = 0;
+	int currentDeck = 0;
+	int currentCard = 0;
+	int totalOfCardsDeck1 = 13;
+	int totalOfCardsDeck2 = 13;
+	int totalOfCardsDeck3 = 13;
+	int totalOfCardsDeck4 = 13;
 	while (loopControl)
 	{
 		randomDeck = rand() % 4;
@@ -46,15 +52,72 @@ void Game::dealCards()
 			if (playerCurrentCount < 11)
 			{
 				cardValueInner = cardValue[12];
+				currentDeck = randomDeck;
+				currentCard = randomCard;
+				deckMaker[currentDeck].decks.erase(deckMaker[currentDeck].decks.begin()+currentCard - 1);
+				if (currentDeck == 0)
+				{
+					totalOfCardsDeck1 -= 1;
+				}
+				else if (currentDeck == 1)
+				{
+					totalOfCardsDeck2 -= 1;
+				}
+				else if (currentDeck == 2)
+				{
+					totalOfCardsDeck3 -= 1;
+				}
+				else if (currentDeck == 3)
+				{
+					totalOfCardsDeck4 -= 1;
+				}
 			}
 			else
 			{
 				cardValueInner = cardValue[randomCard];
+				currentDeck = randomDeck;
+				currentCard = randomCard;
+				deckMaker[currentDeck].decks.erase(deckMaker[currentDeck].decks.begin() + currentCard - 1);
+				if (currentDeck == 0)
+				{
+					totalOfCardsDeck1 -= 1;
+				}
+				else if (currentDeck == 1)
+				{
+					totalOfCardsDeck2 -= 1;
+				}
+				else if (currentDeck == 2)
+				{
+					totalOfCardsDeck3 -= 1;
+				}
+				else if (currentDeck == 3)
+				{
+					totalOfCardsDeck4 -= 1;
+				}
 			}
 		}
 		else
 		{
 			cardValueInner = cardValue[randomCard];
+			currentDeck = randomDeck;
+			currentCard = randomCard;
+			deckMaker[currentDeck].decks.erase(deckMaker[currentDeck].decks.begin() + currentCard - 1);
+			if (currentDeck == 0)
+			{
+				totalOfCardsDeck1 -= 1;
+			}
+			else if (currentDeck == 1)
+			{
+				totalOfCardsDeck2 -= 1;
+			}
+			else if (currentDeck == 2)
+			{
+				totalOfCardsDeck3 -= 1;
+			}
+			else if (currentDeck == 3)
+			{
+				totalOfCardsDeck4 -= 1;
+			}
 		}
 
 	}
