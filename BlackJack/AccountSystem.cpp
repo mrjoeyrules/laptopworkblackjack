@@ -9,10 +9,6 @@
 #include "MainMenu.h"
 #include "Game.h"
 using namespace std;
-Validation val;
-MainMenu mm;
-Game game;
-CustomMath cusMath;
 ifstream accountFile("AccountInfo.txt");
 
 struct Account
@@ -24,7 +20,8 @@ struct Account
 
 void AccountSystem::LogIn()
 {
-	
+	Game game;
+	Validation val;
 	string attemptedUsername;
 	int attemptedPasscode;
 	bool loopControl = true;
@@ -107,6 +104,9 @@ void AccountSystem::LogIn()
 
 void AccountSystem::AccountCreator()
 {
+	MainMenu mm;
+	CustomMath cusMath;
+	Validation val;
 	ifstream accountFile("AccountInfo.txt");
 	int count = 0;
 	if (accountFile.is_open())

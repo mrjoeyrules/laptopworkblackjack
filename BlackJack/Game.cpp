@@ -5,12 +5,13 @@
 #include "FileSystem.h"
 #include "Validation.h"
 #include "MainMenu.h"
+#include <time.h>
 using namespace std;
 
 int playerCurrentCount = 0;
 int dealerCurrentCount = 0;
 int const MaxCardsPerDeck = 13;
-int const MaxCardsPerDeckAce = 14;
+int const MaxCardsPerDeckAce = 13;
 int const MaxDecks = 4;
 int const MaxHouses = 4;
 int totalOfCardsDeck1 = 13;
@@ -38,8 +39,12 @@ void Game::defineDeck()
 	}	
 }
 
-int Game::dealCards(int* cardValueInner, int*currentDeck)
+int * Game::dealCards()
 {
+	srand(time(NULL));
+	int returnValueArr[2];
+	int cardValueInner;
+	int currentDeck;
 	bool loopControl = true;
 	int randomDeck = 0;
 	int randomCard = 0;
@@ -49,130 +54,160 @@ int Game::dealCards(int* cardValueInner, int*currentDeck)
 		if (totalOfCardsDeck1 == 0)
 		{
 			randomDeck = rand() % 3 + 1;
-			randomCard = rand() % totalOfCardsDeck1 - 1;
+			randomCard = rand() % totalOfCardsDeck1;
 		}
 		else if (totalOfCardsDeck2 == 0)
 		{
 			int possibleDecks[3] = { 0,2,3 };
 			int partRandom = rand() % 2;
 			randomDeck = possibleDecks[partRandom];
-			randomCard = rand() % totalOfCardsDeck2 - 1;
+			randomCard = rand() % totalOfCardsDeck2;
 		}
 		else if (totalOfCardsDeck3 == 0)
 		{
 			int possibleDecks[3] = { 0,1,3 };
 			int partRandom = rand() % 2;
 			randomDeck = possibleDecks[partRandom];
-			randomCard = rand() % totalOfCardsDeck3 - 1;
+			randomCard = rand() % totalOfCardsDeck3;
 		}
 		else if (totalOfCardsDeck4 == 0)
 		{
 			int possibleDecks[3] = { 0,1,2 };
 			int partRandom = rand() % 2;
 			randomDeck = possibleDecks[partRandom];
-			randomCard = rand() % totalOfCardsDeck4 - 1;
+			randomCard = rand() % totalOfCardsDeck4;
 		}
 		else
 		{
 			randomDeck = rand() % 4;
 			if (randomDeck == 0)
 			{
-				randomCard = rand() % totalOfCardsDeck1 - 1;
+				randomCard = rand() % totalOfCardsDeck1;
 			}
 			else if (randomDeck == 1)
 			{
-				randomCard = rand() % totalOfCardsDeck2 - 1;
+				randomCard = rand() % totalOfCardsDeck2;
 			}
 			else if (randomDeck == 2)
 			{
-				randomCard = rand() % totalOfCardsDeck3 - 1;
+				randomCard = rand() % totalOfCardsDeck3;
 			}
 			else if (randomDeck == 3)
 			{
-				randomCard = rand() % totalOfCardsDeck4 - 1;
+				randomCard = rand() % totalOfCardsDeck4;
 			}
 		}
 		if (randomCard == 0)
 		{
 			if (playerCurrentCount < 11)
 			{
-				*cardValueInner = cardValue[12];
-				*currentDeck = randomDeck;
+				cardValueInner = cardValue[12];
+				currentDeck = randomDeck;
 				currentCard = randomCard;
-				deckMaker[*currentDeck].decks.erase(deckMaker[*currentDeck].decks.begin()+currentCard - 1);
-				if (*currentDeck == 0)
+				deckMaker[currentDeck].decks.erase(deckMaker[currentDeck].decks.begin()+currentCard - 1);
+				if (currentDeck == 0)
 				{
-					totalOfCardsDeck1 -= 1;
+					totalOfCardsDeck1 --;
 				}
-				else if (*currentDeck == 1)
+				else if (currentDeck == 1)
 				{
-					totalOfCardsDeck2 -= 1;
+					totalOfCardsDeck2 --;
 				}
-				else if (*currentDeck == 2)
+				else if (currentDeck == 2)
 				{
-					totalOfCardsDeck3 -= 1;
+					totalOfCardsDeck3 --;
 				}
-				else if (*currentDeck == 3)
+				else if (currentDeck == 3)
 				{
-					totalOfCardsDeck4 -= 1;
+					totalOfCardsDeck4 --;
 				}
-				return *cardValueInner, *currentDeck;
+				returnValueArr[0] = cardValueInner;
+				returnValueArr[1] = currentDeck;
+				return returnValueArr;
 				loopControl = false;
 			}
 			else
 			{
-				*cardValueInner = cardValue[randomCard];
-				*currentDeck = randomDeck;
+				cardValueInner = cardValue[randomCard];
+				currentDeck = randomDeck;
 				currentCard = randomCard;
-				deckMaker[*currentDeck].decks.erase(deckMaker[*currentDeck].decks.begin() + currentCard - 1);
-				if (*currentDeck == 0)
+				deckMaker[currentDeck].decks.erase(deckMaker[currentDeck].decks.begin() + currentCard - 1);
+				if (currentDeck == 0)
 				{
-					totalOfCardsDeck1 -= 1;
+					totalOfCardsDeck1 --;
 				}
-				else if (*currentDeck == 1)
+				else if (currentDeck == 1)
 				{
-					totalOfCardsDeck2 -= 1;
+					totalOfCardsDeck2 --;
 				}
-				else if (*currentDeck == 2)
+				else if (currentDeck == 2)
 				{
-					totalOfCardsDeck3 -= 1;
+					totalOfCardsDeck3 --;
 				}
-				else if (*currentDeck == 3)
+				else if (currentDeck == 3)
 				{
-					totalOfCardsDeck4 -= 1;
+					totalOfCardsDeck4 --;
 				}
-				return *cardValueInner, *currentDeck;
+				returnValueArr[0] = cardValueInner;
+				returnValueArr[1] = currentDeck;
+				return returnValueArr;
 				loopControl = false;
 			}
 		}
 		else
 		{
-			*cardValueInner = cardValue[randomCard];
-			*currentDeck = randomDeck;
+			cardValueInner = cardValue[randomCard];
+			currentDeck = randomDeck;
 			currentCard = randomCard;
-			deckMaker[*currentDeck].decks.erase(deckMaker[*currentDeck].decks.begin() + currentCard - 1);
-			if (*currentDeck == 0)
+			deckMaker[currentDeck].decks.erase(deckMaker[currentDeck].decks.begin() + currentCard - 1);
+			if (currentDeck == 0)
 			{
-				totalOfCardsDeck1 -= 1;
+				totalOfCardsDeck1 --;
 			}
-			else if (*currentDeck == 1)
+			else if (currentDeck == 1)
 			{
-				totalOfCardsDeck2 -= 1;
+				totalOfCardsDeck2 --;
 			}
-			else if (*currentDeck == 2)
+			else if (currentDeck == 2)
 			{
-				totalOfCardsDeck3 -= 1;
+				totalOfCardsDeck3 --;
 			}
-			else if (*currentDeck == 3)
+			else if (currentDeck == 3)
 			{
-				totalOfCardsDeck4 -= 1;
+				totalOfCardsDeck4 --;
 			}
-			return *cardValueInner, *currentDeck;
+			returnValueArr[0] = cardValueInner;
+			returnValueArr[1] = currentDeck;
+			return returnValueArr;
 			loopControl = false;
 		}
 
 	}
-	
+	return 0;
+}
+
+void Game::playerRound()
+{
+	int currentPlayerCard = 0;
+	int currentCardHouse = 0;
+	int* returnedValues;
+	returnedValues = dealCards();
+	returnedValues[0] = currentPlayerCard;
+	returnedValues[1] = currentCardHouse;
+	playerCurrentCount = cardValue[currentPlayerCard];
+	string cardValueName = deckMaker[currentCardHouse].decks[currentPlayerCard];
+	string currentHouse = houses[currentCardHouse];
+	cout << "You have been dealt a " << cardValueName << " of " << currentHouse << endl;
+	cout << "Your count is " << playerCurrentCount << endl;
+}
+void Game::dealerRound()
+{
+	int currentDealerCard = 0;
+	int currentCardHouse = 0;
+	int* returnedValues;
+	returnedValues = dealCards();
+	returnedValues[0] = currentDealerCard;
+	returnedValues[1] = currentCardHouse;
 }
 
 void Game::playRound()
@@ -193,20 +228,15 @@ void Game::playRound()
 			betValidation = false;
 		}
 	}
-	reshuffleCards();
-	int currentPlayerCard;
-	int currentCardHouse;
-	dealCards(&currentPlayerCard, &currentCardHouse);
-	playerCurrentCount = cardValue[currentPlayerCard];
-	string cardValueName = deckMaker[currentCardHouse].decks[currentPlayerCard];
-	string currentHouse = houses[currentCardHouse];
-	cout << "You have been dealt a " << cardValueName << " of " << currentHouse << endl;
-	cout << "Your count is " << playerCurrentCount << endl;
-	
-
-	
+	while (true)
+	{
+		//reshuffleCards();
+		playerRound();
+	}
 	
 }
+
+
 
 void Game::reshuffleCards()
 {
@@ -222,5 +252,5 @@ void Game::startGame(string username, int chipBal)
 	playerUserName = username;
 	playerChipBal = chipBal;
 	defineDeck();
-
+	playRound();
 }
