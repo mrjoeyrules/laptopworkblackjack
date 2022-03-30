@@ -12,7 +12,7 @@ using namespace std;
 class Game
 {
 private:
-	int * dealCards();
+	int dealCards();
 	void playRound();
 	void reshuffleCards();
 	void defineDeck();
