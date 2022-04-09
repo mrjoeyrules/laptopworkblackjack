@@ -27,11 +27,6 @@ struct Decks
 	std::vector<string> decks;
 };
 
-struct Returns
-{
-	int returnCard = 0;
-	int returnDeck = 0;
-};
 
 Decks deckMaker[MaxDecks];
 
@@ -105,7 +100,7 @@ int Game::dealCards()
 		{
 			if (playerCurrentCount < 11)
 			{
-				cardValueInner = cardValue[12];
+				cardValueInner = cardValue[13];
 				currentDeck = randomDeck;
 				currentCard = randomCard;
 				deckMaker[currentDeck].decks.erase(deckMaker[currentDeck].decks.begin()+currentCard - 1);
@@ -126,12 +121,12 @@ int Game::dealCards()
 					totalOfCardsDeck4 -= 1;
 				}
 				currentSuit = currentDeck;
-				return cardValueInner + 1;
+				return cardValueInner;
 				loopControl = false;
 			}
 			else
 			{
-				cardValueInner = cardValue[randomCard];
+				cardValueInner = cardValue[randomCard + 1];
 				currentDeck = randomDeck;
 				currentCard = randomCard;
 				deckMaker[currentDeck].decks.erase(deckMaker[currentDeck].decks.begin() + currentCard - 1);
@@ -152,13 +147,13 @@ int Game::dealCards()
 					totalOfCardsDeck4 -= 1;
 				}
 				currentSuit = currentDeck;
-				return cardValueInner + 1;
+				return cardValueInner;
 				loopControl = false;
 			}
 		}
 		else
 		{
-			cardValueInner = cardValue[randomCard];
+			cardValueInner = cardValue[randomCard +1];
 			currentDeck = randomDeck;
 			currentCard = randomCard;
 			deckMaker[currentDeck].decks.erase(deckMaker[currentDeck].decks.begin() + currentCard -1);
@@ -179,7 +174,7 @@ int Game::dealCards()
 				totalOfCardsDeck4 -= 1;
 			}
 			currentSuit = currentDeck;
-			return cardValueInner + 1;
+			return cardValueInner;
 			loopControl = false;
 		}
 
@@ -195,7 +190,7 @@ void Game::playerRound()
 	string cardValueName = deckMaker[currentCardSuit].decks[currentPlayerCard];
 	string currentSuit = suits[currentCardSuit];
 	cout << "You have been dealt a " << cardValueName << " of " << currentSuit << endl;
-	cout << "Your count is " << playerCurrentCount + 1 << endl;
+	cout << "Your count is " << playerCurrentCount<< endl;
 }
 void Game::dealerRound()
 {
