@@ -18,6 +18,8 @@ private:
 	void defineDeck();
 	void playerRound();
 	void dealerRound();
+	void playerDecision();
+	void gameLogic();
 public:
 	void startGame(string username, int chipBal);
 };

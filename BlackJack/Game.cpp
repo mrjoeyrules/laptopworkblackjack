@@ -181,6 +181,21 @@ int Game::dealCards()
 	}
 	return 0;
 }
+void Game::gameLogic()
+{
+
+}
+
+void Game::playerDecision()
+{
+	Validation validation;
+	cout << "You currently have a " << playerCurrentCount << " do you want to hit or stick?:" << endl;
+	int decision = validation.intValidation("Press 1: To Hit, Press 2 : To Stick \n");
+	if (decision == 0)
+	{
+		
+	}
+}
 
 void Game::playerRound()
 {
@@ -195,7 +210,6 @@ void Game::playerRound()
 void Game::dealerRound()
 {
 	int currentDealerCard = dealCards();
-	currentDealerCard += 1;
 	int currentCardSuit = currentSuit;
 	dealerCurrentCount = cardValue[currentDealerCard];
 	string cardValueName = deckMaker[currentCardSuit].decks[currentDealerCard];
