@@ -22,6 +22,7 @@ int playerChipBal;
 int cardValue[MaxCardsPerDeckAce] = { 1,2,3,4,5,6,7,8,9,10,10,10,10,11 };
 string suits[Maxsuits] = { "Hearts", "Diamonds", "Clubs", "Spades" };
 int currentSuit;
+int cardCount = 0;
 struct Decks
 {
 	std::vector<string> decks;
@@ -185,15 +186,57 @@ void Game::gameLogic()
 {
 
 }
-
-void Game::playerDecision()
+int Game::playerDecision()
 {
+	bool loopControl = true;
 	Validation validation;
-	cout << "You currently have a " << playerCurrentCount << " do you want to hit or stick?:" << endl;
-	int decision = validation.intValidation("Press 1: To Hit, Press 2 : To Stick \n");
-	if (decision == 0)
+	while (loopControl)
 	{
-		
+		cout << "You currently have a " << playerCurrentCount << " do you want to hit or stick?" << endl;
+		int decision = validation.intValidation("Press 1: To Hit, Press 2: To Stick \n");
+		if (decision == 1)
+		{
+			loopControl = false;
+			return 1;
+		}
+		else if (decision == 2)
+		{
+			loopControl = false;
+			return 2;
+		}
+		else
+		{
+			cout << "Please enter either 1, or 2!" << endl;
+		}
+	}
+}
+int Game::playerDecisionDouble()
+{
+	bool loopControl = true;
+	Validation validation;
+	while (loopControl)
+	{
+		cout << "You currently have a " << playerCurrentCount << " do you want to hit or stick or Double Down?" << endl;
+		int decision = validation.intValidation("Press 1: To Hit, Press 2: To Stick, Press 3: To Double Down \n");
+		if (decision == 1)
+		{
+			loopControl = false;
+			return 1;
+		}
+		else if (decision == 2)
+		{
+			loopControl = false;
+			return 2;
+		}
+		else if (decision == 3)
+		{
+			loopControl = false;
+			return 3;
+		}
+		else
+		{
+			cout << "Please enter either 1, 2, or 3!" << endl;
+		}
 	}
 }
 
@@ -201,7 +244,7 @@ void Game::playerRound()
 {
 	int currentPlayerCard = dealCards();
 	int currentCardSuit = currentSuit;
-	playerCurrentCount = cardValue[currentPlayerCard];
+	playerCurrentCount += cardValue[currentPlayerCard];
 	string cardValueName = deckMaker[currentCardSuit].decks[currentPlayerCard];
 	string currentSuit = suits[currentCardSuit];
 	cout << "You have been dealt a " << cardValueName << " of " << currentSuit << endl;
@@ -211,12 +254,13 @@ void Game::dealerRound()
 {
 	int currentDealerCard = dealCards();
 	int currentCardSuit = currentSuit;
-	dealerCurrentCount = cardValue[currentDealerCard];
+	dealerCurrentCount += cardValue[currentDealerCard];
 	string cardValueName = deckMaker[currentCardSuit].decks[currentDealerCard];
 	string currentSuit = suits[currentCardSuit];
 	cout << "You have been dealt a " << cardValueName << " of " << currentSuit << endl;
-	cout << "The Dealers count is " << dealerCurrentCount + 1 << endl;
+	cout << "The Dealers count is " << dealerCurrentCount << endl;
 }
+
 
 void Game::playRound()
 {
@@ -237,8 +281,12 @@ void Game::playRound()
 			betValidation = false;
 		}
 	}
-	playerRound();
-	dealerRound();
+	for (size_t i = 0; i < 2; i++)
+	{
+		playerRound();
+		dealerRound();
+	}
+	playerDecisionDouble();
 }
 
 
