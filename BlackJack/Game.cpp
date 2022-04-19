@@ -42,149 +42,56 @@ void Game::defineDeck()
 
 int Game::dealCards()
 {
-	srand(time(NULL));
-	int cardValueInner;
-	int currentDeck;
+	srand(time(0));
+	int cardValueInner = 0;
+	int currentDeck = 0;
 	bool loopControl = true;
 	int randomDeck = 0;
 	int randomCard = 0;
 	int currentCard = 0;
 	while (loopControl)
 	{
-		if (totalOfCardsDeck1 == 0)
+		randomDeck = rand() % 4;
+		if (randomDeck == 0)
 		{
-			randomDeck = rand() % 3 + 1;
 			randomCard = rand() % totalOfCardsDeck1;
 		}
-		else if (totalOfCardsDeck2 == 0)
+		else if (randomDeck == 1)
 		{
-			int possibleDecks[3] = { 0,2,3 };
-			int partRandom = rand() % 2;
-			randomDeck = possibleDecks[partRandom];
 			randomCard = rand() % totalOfCardsDeck2;
 		}
-		else if (totalOfCardsDeck3 == 0)
+		else if (randomDeck == 2)
 		{
-			int possibleDecks[3] = { 0,1,3 };
-			int partRandom = rand() % 2;
-			randomDeck = possibleDecks[partRandom];
 			randomCard = rand() % totalOfCardsDeck3;
 		}
-		else if (totalOfCardsDeck4 == 0)
+		else if (randomDeck == 3)
 		{
-			int possibleDecks[3] = { 0,1,2 };
-			int partRandom = rand() % 2;
-			randomDeck = possibleDecks[partRandom];
-			randomCard = rand() % totalOfCardsDeck4;
+		randomCard = rand() % totalOfCardsDeck4;
 		}
-		else
+		cardValueInner = cardValue[randomCard + 1];
+		currentDeck = randomDeck;
+		currentCard = randomCard;
+		if (currentDeck == 0)
 		{
-			randomDeck = rand() % 4;
-			if (randomDeck == 0)
-			{
-				randomCard = rand() % totalOfCardsDeck1;
-			}
-			else if (randomDeck == 1)
-			{
-				randomCard = rand() % totalOfCardsDeck2;
-			}
-			else if (randomDeck == 2)
-			{
-				randomCard = rand() % totalOfCardsDeck3;
-			}
-			else if (randomDeck == 3)
-			{
-				randomCard = rand() % totalOfCardsDeck4;
-			}
+			totalOfCardsDeck1 -= 1;
 		}
-		if (randomCard == 0)
+		else if (currentDeck == 1)
 		{
-			if (playerCurrentCount < 11)
-			{
-				cardValueInner = cardValue[13];
-				currentDeck = randomDeck;
-				currentCard = randomCard;
-				deckMaker[currentDeck].decks.erase(deckMaker[currentDeck].decks.begin()+currentCard - 1);
-				if (currentDeck == 0)
-				{
-					totalOfCardsDeck1 -= 1;
-				}
-				else if (currentDeck == 1)
-				{
-					totalOfCardsDeck2 -= 1;
-				}
-				else if (currentDeck == 2)
-				{
-					totalOfCardsDeck3 -= 1;
-				}
-				else if (currentDeck == 3)
-				{
-					totalOfCardsDeck4 -= 1;
-				}
-				currentSuit = currentDeck;
-				return cardValueInner;
-				loopControl = false;
-			}
-			else
-			{
-				cardValueInner = cardValue[randomCard + 1];
-				currentDeck = randomDeck;
-				currentCard = randomCard;
-				deckMaker[currentDeck].decks.erase(deckMaker[currentDeck].decks.begin() + currentCard - 1);
-				if (currentDeck == 0)
-				{
-					totalOfCardsDeck1 -= 1;
-				}
-				else if (currentDeck == 1)
-				{
-					totalOfCardsDeck2 -= 1;
-				}
-				else if (currentDeck == 2)
-				{
-					totalOfCardsDeck3 -= 1;
-				}
-				else if (currentDeck == 3)
-				{
-					totalOfCardsDeck4 -= 1;
-				}
-				currentSuit = currentDeck;
-				return cardValueInner;
-				loopControl = false;
-			}
+			totalOfCardsDeck2 -= 1;
 		}
-		else
+		else if (currentDeck == 2)
 		{
-			cardValueInner = cardValue[randomCard +1];
-			currentDeck = randomDeck;
-			currentCard = randomCard;
-			deckMaker[currentDeck].decks.erase(deckMaker[currentDeck].decks.begin() + currentCard -1);
-			if (currentDeck == 0)
-			{
-				totalOfCardsDeck1 -= 1;
-			}
-			else if (currentDeck == 1)
-			{
-				totalOfCardsDeck2 -= 1;
-			}
-			else if (currentDeck == 2)
-			{
-				totalOfCardsDeck3 -= 1;
-			}
-			else if (currentDeck == 3)
-			{
-				totalOfCardsDeck4 -= 1;
-			}
-			currentSuit = currentDeck;
-			return cardValueInner;
-			loopControl = false;
+			totalOfCardsDeck3 -= 1;
 		}
-
+		else if (currentDeck == 3)
+		{
+			totalOfCardsDeck4 -= 1;
+		}
+		currentSuit = currentDeck;
+		return cardValueInner;
+		loopControl = false;
 	}
 	return 0;
-}
-void Game::gameLogic()
-{
-
 }
 int Game::playerDecision()
 {
@@ -242,8 +149,10 @@ int Game::playerDecisionDouble()
 
 void Game::playerRound()
 {
-	int currentPlayerCard = dealCards();
-	int currentCardSuit = currentSuit;
+	int currentPlayerCard = 0;
+	currentPlayerCard = dealCards();
+	int currentCardSuit = 0;
+	currentCardSuit = currentSuit;
 	playerCurrentCount += cardValue[currentPlayerCard];
 	string cardValueName = deckMaker[currentCardSuit].decks[currentPlayerCard];
 	string currentSuit = suits[currentCardSuit];
@@ -264,6 +173,8 @@ void Game::dealerRound()
 
 void Game::playRound()
 {
+	bool isStuck = false;
+	bool bust = false;
 	Validation val;
 	playerCurrentCount = 0;
 	dealerCurrentCount = 0;
@@ -286,10 +197,74 @@ void Game::playRound()
 		playerRound();
 		dealerRound();
 	}
-	playerDecisionDouble();
+	int playerDecisionReturnFirst = playerDecisionDouble();
+	while (isStuck != true)
+	{
+		if (playerCurrentCount > 21)
+		{
+			cout << "You have gone bust" << endl;
+			isStuck = true;
+			bust = true;
+		}
+		else
+		{
+			if (playerDecisionReturnFirst == 1)
+			{
+				playerRound();
+				int playerDecisionReturn = playerDecision();
+				if (playerDecisionReturn == 1)
+				{
+					playerRound();
+
+				}
+				else if (playerDecisionReturn == 2)
+				{
+					isStuck = true;
+				}
+			}
+			else if (playerDecisionReturnFirst == 2)
+			{
+				cout << "You have stuck at " << playerCurrentCount << endl;
+				isStuck = false;
+			}
+			else if (playerDecisionReturnFirst == 3)
+			{
+				roundBet *= 2;
+				playerRound();
+				isStuck = true;
+			}
+		}
+		
+	}
+	if (bust)
+	{
+		cout << "You have busted at " << playerCurrentCount << endl;
+	}
+	cout << "You have stuck at " << playerCurrentCount << endl;
+	
 }
 
-
+void Game::dealerPlayRound()
+{
+	
+	bool dealerStuck = false;
+	while (dealerStuck != true)
+	{
+		if (dealerCurrentCount >= 17)
+		{
+			dealerStuck = true;
+			if (dealerCurrentCount > 21)
+			{
+				cout << "Dealer is Bust" << endl;
+			}
+		}
+		else
+		{
+			dealerRound();
+		}
+	}
+	
+}
 
 void Game::reshuffleCards()
 {
