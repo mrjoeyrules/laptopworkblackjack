@@ -179,7 +179,32 @@ void AccountSystem::AccountCreator()
 	int baseBalance = 25000;
 	ofstream fileOutput;
 	fileOutput.open("AccountInfo.txt", std::ios_base::app);
-	fileOutput << newUsername << " " << newPasscode << " " << baseBalance << endl;
+	fileOutput << "\n" << newUsername << " " << newPasscode << " " << baseBalance;
 	cout << "Account created enjoy! Please log in with your details!" << endl;
 	mm.mainMenu();
+}
+
+void AccountSystem::SetBalance(int balanceChange, bool isWin, int playerBal)
+{
+	if (isWin)
+	{
+		playerBal += balanceChange;
+	}
+	else if (isWin == false)
+	{
+		playerBal -= balanceChange;
+	}
+	/*Line Counter*/
+	ifstream accountFile("AccountInfo.txt");
+	int count = 0;
+	if (accountFile.is_open())
+	{
+		string line;
+		while (!accountFile.eof())
+		{
+			getline(accountFile, line);
+			count++;
+		}
+	}
+	accountFile.close();
 }

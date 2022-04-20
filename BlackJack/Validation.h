@@ -7,8 +7,6 @@ using namespace std;
 class Validation
 {
 public:
-
     int intValidation(string inputMessage);
-    
 };
 #endif

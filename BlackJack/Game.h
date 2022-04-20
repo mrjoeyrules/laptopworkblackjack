@@ -8,6 +8,9 @@
 #include "FileSystem.h"
 #include "Validation.h"
 #include "MainMenu.h"
+#include <time.h>
+#include <Windows.h>
+#include "AccountSystem.h"
 using namespace std;
 class Game
 {

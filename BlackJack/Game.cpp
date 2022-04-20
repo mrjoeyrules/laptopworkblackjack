@@ -7,6 +7,7 @@
 #include "MainMenu.h"
 #include <time.h>
 #include <Windows.h>
+#include "AccountSystem.h"
 using namespace std;
 
 int playerCurrentCount = 0;
@@ -100,7 +101,7 @@ int Game::playerDecision()
 	Validation validation;
 	while (loopControl)
 	{
-		cout << "You currently have a " << playerCurrentCount << " do you want to hit or stick?" << endl;
+		cout << "You currently have a " << playerCurrentCount << " do you want to hit or stick? \n" << endl;
 		int decision = validation.intValidation("Press 1: To Hit, Press 2: To Stick \n");
 		if (decision == 1)
 		{
@@ -114,48 +115,82 @@ int Game::playerDecision()
 		}
 		else
 		{
-			cout << "Please enter either 1, or 2!" << endl;
+			cout << "Please enter either 1, or 2! \n" << endl;
 		}
 	}
 }
 void Game::winningLogic(bool isBustPlayer, bool isBustDealer, int betAmount, bool isBlackJack, bool isDealerBlackJack, bool isDoubleDown)
 {
+	AccountSystem accSys;
+	bool isWin = false;
 	int playerWinnings = 0;
 	int playerLosings = 0;
 	if (isBlackJack)
 	{
+		isWin = true;
 		playerWinnings = betAmount * 2.5;
+		accSys.SetBalance(playerWinnings, isWin, playerChipBal);
 	}
 	else if (isDoubleDown)
 	{
 		if (playerCurrentCount > dealerCurrentCount)
 		{
+			isWin = true;
+			cout << "You have won a double down Congratulations! \n" << endl;
 			playerWinnings = betAmount * 2;
+			accSys.SetBalance(playerLosings, isWin, playerChipBal);
 		}
 		else if (dealerCurrentCount > playerCurrentCount)
 		{
+			cout << "You have lost a double down Too Bad! \n" << endl;
 			playerLosings = betAmount;
+			accSys.SetBalance(playerLosings, isWin, playerChipBal);
 		}
 		else if (dealerCurrentCount == playerCurrentCount)
 		{
-			cout << "You and the dealer push, You keep your chips" << endl;
+			cout << "You and the dealer push, You keep your chips \n" << endl;
+		}
+		else if (isBustPlayer)
+		{
+			cout << "You have lost via a bust\n" << endl;
+			playerLosings = betAmount;
+			accSys.SetBalance(playerLosings, isWin, playerChipBal);
+		}
+		else if (isBustDealer)
+		{
+			cout << "You have won via the dealer going bust\n" << endl;
+			playerWinnings = betAmount;
+			accSys.SetBalance(playerLosings, isWin, playerChipBal);
 		}
 	}
 	else if (playerCurrentCount > dealerCurrentCount && isBustPlayer == false)
 	{
+		isWin = true;
 		playerWinnings = betAmount * 2;
-		cout << "Player has won!\n You have won " << playerWinnings << " chips congratulations" << endl;
-
+		cout << "Player has won!\n You have won " << playerWinnings << " chips congratulations" << "\n" << endl;
+		accSys.SetBalance(playerLosings, isWin, playerChipBal);
 	}
 	else if (playerCurrentCount < dealerCurrentCount && isBustPlayer == false && isBustDealer == false)
 	{
 		playerLosings = betAmount;
-		cout << "The dealer has beat you!" << endl;
-		playerChipBal -= playerLosings;
+		cout << "The dealer has beat you!\n" << endl;
+		accSys.SetBalance(playerLosings, isWin, playerChipBal);
 	}
 	else if (dealerCurrentCount == playerCurrentCount)
 	{
-		cout << "You and the dealer push, You keep your chips" << endl;
+		cout << "You and the dealer push, You keep your chips \n" << endl;
+	}
+	else if (isBustPlayer)
+	{
+		cout << "You have lost via a bust\n" << endl;
+		playerLosings = betAmount;
+		accSys.SetBalance(playerLosings, isWin, playerChipBal);
+	}
+	else if (isBustDealer)
+	{
+		cout << "You have won via the dealer going bust\n" << endl;
+		playerWinnings = betAmount;
+		accSys.SetBalance(playerLosings, isWin, playerChipBal);
 	}
 }
 int Game::playerDecisionDouble()
@@ -164,7 +199,7 @@ int Game::playerDecisionDouble()
 	Validation validation;
 	while (loopControl)
 	{
-		cout << "You currently have a " << playerCurrentCount << " do you want to hit or stick or Double Down?" << endl;
+		cout << "You currently have a " << playerCurrentCount << " do you want to hit or stick or Double Down? \n" << endl;
 		int decision = validation.intValidation("Press 1: To Hit, Press 2: To Stick, Press 3: To Double Down \n");
 		if (decision == 1)
 		{
@@ -183,7 +218,7 @@ int Game::playerDecisionDouble()
 		}
 		else
 		{
-			cout << "Please enter either 1, 2, or 3!" << endl;
+			cout << "Please enter either 1, 2, or 3! \n" << endl;
 		}
 	}
 }
@@ -198,9 +233,9 @@ void Game::playerRound()
 	string cardValueName = deckMaker[currentCardSuit].decks[currentPlayerCard];
 	string currentSuit = suits[currentCardSuit];
 	
-	cout << "You have been dealt a " << cardValueName << " of " << currentSuit << endl;
+	cout << "You have been dealt a " << cardValueName << " of " << currentSuit << "\n" << endl;
 	Sleep(2000);
-	cout << "Your count is " << playerCurrentCount<< endl;
+	cout << "Your count is " << playerCurrentCount << "\n" << endl;
 	Sleep(2000);
 }
 void Game::dealerRound()
@@ -211,9 +246,9 @@ void Game::dealerRound()
 	string cardValueName = deckMaker[currentCardSuit].decks[currentDealerCard];
 	string currentSuit = suits[currentCardSuit];
 
-	cout << "You have been dealt a " << cardValueName << " of " << currentSuit << endl;
+	cout << "The dealer has been dealt a " << cardValueName << " of " << currentSuit << "\n" << endl;
 	Sleep(2000);
-	cout << "The Dealers count is " << dealerCurrentCount << endl;
+	cout << "The Dealers count is " << dealerCurrentCount << "\n" << endl;
 	Sleep(2000);
 }
 
@@ -236,6 +271,7 @@ void Game::dealerPlayRound(bool isBustPlayer, int betAmount, bool isBlackJack, b
 		if (isBustPlayer)
 		{
 			dealerStuck = true;
+			cout << "The dealer has stuck at " << dealerCurrentCount << "\n" << endl;
 			winningLogic(isBustPlayer, isBustDealer, betAmount, isBlackJack, isDealerBlackJack, isDoubleDown);
 		}
 		else if (dealerCurrentCount >= 17)
@@ -244,12 +280,12 @@ void Game::dealerPlayRound(bool isBustPlayer, int betAmount, bool isBlackJack, b
 			if (dealerCurrentCount > 21)
 			{
 				isBustDealer = true;
-				cout << "Dealer is Bust" << endl;
+				cout << "Dealer is Bust" << "\n" << endl;
 				winningLogic(isBustPlayer, isBustDealer, betAmount, isBlackJack, isDealerBlackJack, isDoubleDown);
 			}
 			else
 			{
-				cout << "Dealer has stuck at " << dealerCurrentCount << endl;
+				cout << "Dealer has stuck at " << dealerCurrentCount << "\n" << endl;
 				winningLogic(isBustPlayer, isBustDealer, betAmount, isBlackJack, isDealerBlackJack, isDoubleDown);
 			}
 		}
@@ -271,10 +307,11 @@ void Game::playRound()
 	bool betValidation = true;
 	while (betValidation)
 	{
+		cout << "You have " << playerChipBal << " chips\n" << endl;
 		roundBet = val.intValidation("Please enter your wager for this round of BlackJack: \n");
 		if (roundBet > playerChipBal)
 		{
-			cout << "You cannot bet more chips than you have! You have " << playerChipBal << "chips!" << endl;
+			cout << "You cannot bet more chips than you have! You have " << playerChipBal << "chips!\n" << endl;
 		}
 		else
 		{
@@ -293,55 +330,68 @@ void Game::playRound()
 	{
 		isBlackJack = true;
 		isStuck = true;
-		cout << "Congratulations you got a black jack" << endl;
+		cout << "Congratulations you got a black jack\n" << endl;
 	}
-    while (isStuck != true)
-    {
-        if (playerCurrentCount > 21)
-        {
-            cout << "You have gone bust" << endl;
-            isStuck = true;
-            bust = true;
-        }
-        else
-        {
-            if (playerDecisionReturnFirst == 1)
-            {
-                playerRound();
-                int playerDecisionReturn = playerDecision();
-                if (playerDecisionReturn == 1)
-                {
-                    playerRound();
+	else
+	{
+		if (playerCurrentCount > 21)
+		{
+			bust = true;
+			isStuck = true;
+			cout << "You have gone Bust" << endl;
+		}
+		else
+		{
+			while (isStuck != true)
+			{
 
-                }
-                else if (playerDecisionReturn == 2)
-                {
-                    isStuck = true;
-                }
-            }
-            else if (playerDecisionReturnFirst == 2)
-            {
-                cout << "You have stuck at " << playerCurrentCount << endl;
-                isStuck = true;
-            }
-            else if (playerDecisionReturnFirst == 3)
-            {
-                roundBet *= 2;
-                playerRound();
-                isStuck = true;
-            }
-        }
-    }
-    if (bust)
-    {
-        cout << "You have busted at " << playerCurrentCount << endl;
-        dealerPlayRound(bust, roundBet, isBlackJack, isDoubleDown);
-    }
-    else
-    {
-        cout << "You have stuck at " << playerCurrentCount << endl;
-        dealerPlayRound(bust, roundBet, isBlackJack, isDoubleDown);
-    }
+				if (playerDecisionReturnFirst == 1)
+				{
+					playerRound();
+					if (playerCurrentCount > 21)
+					{
+						bust = true;
+						isStuck = true;
+						cout << "You have gone Bust" << endl;
+					}
+					else
+					{
+						int playerDecisionReturn = playerDecision();
+						if (playerDecisionReturn == 1)
+						{
+							playerRound();
+
+						}
+						else if (playerDecisionReturn == 2)
+						{
+							isStuck = true;
+						}
+					}
+				}
+				else if (playerDecisionReturnFirst == 2)
+				{
+					cout << "You have stuck at " << playerCurrentCount << "\n" << endl;
+					isStuck = true;
+				}
+				else if (playerDecisionReturnFirst == 3)
+				{
+					roundBet *= 2;
+					playerRound();
+					isStuck = true;
+				}
+			}
+			if (bust)
+			{
+				cout << "You have busted at " << playerCurrentCount << "\n" << endl;
+				dealerPlayRound(bust, roundBet, isBlackJack, isDoubleDown);
+			}
+			else
+			{
+				cout << "You have stuck at " << playerCurrentCount << "\n" << endl;
+				dealerPlayRound(bust, roundBet, isBlackJack, isDoubleDown);
+			}
+		}
+	}
 }
 
 void Game::reshuffleCards()
