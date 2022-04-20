@@ -20,7 +20,7 @@ private:
 	void dealerRound();
 	int playerDecision();
 	int playerDecisionDouble();
-	void gameLogic();
+	void dealerPlayRound();
 public:
 	void startGame(string username, int chipBal);
 };
