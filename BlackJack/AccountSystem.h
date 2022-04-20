@@ -17,5 +17,6 @@ class AccountSystem
 public:
     void LogIn();
     void AccountCreator();
+    void SetBalance();
 };
 #endif
