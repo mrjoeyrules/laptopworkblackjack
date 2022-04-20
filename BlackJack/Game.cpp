@@ -257,6 +257,10 @@ void Game::dealerPlayRound()
 			{
 				cout << "Dealer is Bust" << endl;
 			}
+			else
+			{
+				cout << "Dealer has stuck at " << dealerCurrentCount << endl;
+			}
 		}
 		else
 		{
