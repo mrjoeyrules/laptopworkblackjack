@@ -20,7 +20,8 @@ private:
 	void dealerRound();
 	int playerDecision();
 	int playerDecisionDouble();
-	void dealerPlayRound();
+	void winningLogic(bool isBustPlayer, bool isBustDealer, int betAmount, bool isBlackJack, bool isDealerBlackJack, bool isDoubleDown);
+	void dealerPlayRound(bool isBustPlayer, int betAmount, bool isBlackJack, bool isDoubleDown);
 public:
 	void startGame(string username, int chipBal);
 };
