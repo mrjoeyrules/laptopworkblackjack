@@ -182,5 +182,4 @@ void AccountSystem::AccountCreator()
 	fileOutput << newUsername << " " << newPasscode << " " << baseBalance << endl;
 	cout << "Account created enjoy! Please log in with your details!" << endl;
 	mm.mainMenu();
-	
 }
