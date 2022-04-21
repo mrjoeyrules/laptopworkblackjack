@@ -17,6 +17,6 @@ class AccountSystem
 public:
     void LogIn();
     void AccountCreator();
-    void SetBalance(int balanceChange, bool isWin, int playerBal);
+    void SetBalance(int balanceChange, bool isWin, int playerBal, string playerUserName, int playerPassCode);
 };
 #endif

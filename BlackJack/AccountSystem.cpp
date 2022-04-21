@@ -1,6 +1,7 @@
 #include <iostream>
 #include <string>
 #include <fstream>
+#include <limits>
 #include <vector>
 #include "AccountSystem.h"
 #include "FileSystem.h"
@@ -9,8 +10,6 @@
 #include "MainMenu.h"
 #include "Game.h"
 using namespace std;
-ifstream accountFile("AccountInfo.txt");
-
 struct Account
 {
 	string username;
@@ -20,6 +19,7 @@ struct Account
 
 void AccountSystem::LogIn()
 {
+	ifstream accountFile("AccountInfo.txt");
 	Game game;
 	Validation val;
 	string attemptedUsername;
@@ -36,11 +36,11 @@ void AccountSystem::LogIn()
 		}
 	}
 	accountFile.close();
-	ifstream accountFile("AccountInfo.txt");
+	ifstream accountFile2("AccountInfo.txt");
 	std::vector<Account> accounts;
 	while (loopControl)
 	{
-		if (!accountFile)
+		if (!accountFile2)
 		{
 			cout << "The file in question does not exist \n";
 			loopControl = false;
@@ -48,7 +48,7 @@ void AccountSystem::LogIn()
 		for (size_t i = 0; i < count; i++)
 		{
 			Account account;
-			accountFile >> account.username >> account.passcode >> account.chipBalance;
+			accountFile2 >> account.username >> account.passcode >> account.chipBalance;
 			accounts.push_back(account);
 		}
 		int logInAttempts = 0;
@@ -86,7 +86,7 @@ void AccountSystem::LogIn()
 				}
 				if (isCorrect == true)
 				{
-					game.startGame(accounts[z].username, accounts[z].chipBalance);
+					game.startGame(accounts[z].username, accounts[z].chipBalance, accounts[z].passcode);
 				}
 				else
 				{
@@ -184,27 +184,91 @@ void AccountSystem::AccountCreator()
 	mm.mainMenu();
 }
 
-void AccountSystem::SetBalance(int balanceChange, bool isWin, int playerBal)
+void AccountSystem::SetBalance(int balanceChange, bool isWin, int playerBal, string playerUserName, int playerPassCode)
 {
 	if (isWin)
 	{
-		playerBal += balanceChange;
+		playerBal = playerBal + balanceChange;
 	}
 	else if (isWin == false)
 	{
-		playerBal -= balanceChange;
+		playerBal = playerBal - balanceChange;
 	}
-	/*Line Counter*/
-	ifstream accountFile("AccountInfo.txt");
+	/*Line Counter and reader*/
+	
+	ifstream accountFile3("AccountInfo.txt");
 	int count = 0;
-	if (accountFile.is_open())
+	if (accountFile3.is_open())
 	{
 		string line;
-		while (!accountFile.eof())
+		while (!accountFile3.eof())
 		{
-			getline(accountFile, line);
+			getline(accountFile3, line);
 			count++;
 		}
 	}
-	accountFile.close();
+	cout << count << endl;
+	accountFile3.close();
+
+	ifstream accFile("AccountInfo.txt");
+	std::vector<Account> accounts2;
+	Account account2;
+	for (size_t p = 0; p < count; p++)
+	{
+		Account account2;
+		accFile >> account2.username >> account2.passcode >> account2.chipBalance;
+		accounts2.push_back(account2);
+	}
+	accFile.close();
+	ifstream accFile2("AccountInfo.txt");
+	string search = playerUserName;
+	string line2;
+	int whereLine = 0;
+	size_t pos;
+	while (!accFile2.eof())
+	{
+		while (accFile2.good())
+		{
+			getline(accFile2, line2); // get line from file
+			pos = line2.find(search); // search
+			if (pos != string::npos) // string::npos is returned if string is not found
+			{
+				cout << "Found!";
+				cout << pos << endl;
+				break;
+			}
+		}
+		break;
+	}
+	accFile.close();
+	ofstream accFileWrite;
+	accFileWrite.open("AccountInfo.txt", std::ios_base::trunc);
+	for (size_t i = 0; i < count; i++)
+	{
+		if (i == pos)
+		{
+			if (i == 0)
+			{
+				accFileWrite << playerUserName << " " << playerPassCode << " " << playerBal;
+			}
+			else
+			{
+				accFileWrite << "\n" << playerUserName << " " << playerPassCode << " " << playerBal;
+			}
+			
+		}
+		else
+		{
+			if (i == 0)
+			{
+				accFileWrite << accounts2[i].username << " " << accounts2[i].passcode << " " << accounts2[i].chipBalance;
+			}
+			else
+			{
+				accFileWrite << "\n" << accounts2[i].username << " " << accounts2[i].passcode << " " << accounts2[i].chipBalance;
+			}
+		}
+	}
+	accFileWrite.close();
+	cout << "File saving done" << endl;
 }

@@ -10,6 +10,7 @@
 #include "AccountSystem.h"
 using namespace std;
 
+int playerPassCode = 0000;
 int playerCurrentCount = 0;
 int dealerCurrentCount = 0;
 int const MaxCardsPerDeck = 13;
@@ -25,6 +26,7 @@ int cardValue[MaxCardsPerDeckAce] = { 1,2,3,4,5,6,7,8,9,10,10,10,10,11 };
 string suits[Maxsuits] = { "Hearts", "Diamonds", "Clubs", "Spades" };
 int currentSuit;
 int cardCount = 0;
+string playerUserName;
 struct Decks
 {
 	std::vector<string> decks;
@@ -129,7 +131,7 @@ void Game::winningLogic(bool isBustPlayer, bool isBustDealer, int betAmount, boo
 	{
 		isWin = true;
 		playerWinnings = betAmount * 2.5;
-		accSys.SetBalance(playerWinnings, isWin, playerChipBal);
+		accSys.SetBalance(playerWinnings, isWin, playerChipBal, playerUserName, playerPassCode);
 	}
 	else if (isDoubleDown)
 	{
@@ -138,13 +140,13 @@ void Game::winningLogic(bool isBustPlayer, bool isBustDealer, int betAmount, boo
 			isWin = true;
 			cout << "You have won a double down Congratulations! \n" << endl;
 			playerWinnings = betAmount * 2;
-			accSys.SetBalance(playerLosings, isWin, playerChipBal);
+			accSys.SetBalance(playerLosings, isWin, playerChipBal, playerUserName, playerPassCode);
 		}
 		else if (dealerCurrentCount > playerCurrentCount)
 		{
 			cout << "You have lost a double down Too Bad! \n" << endl;
 			playerLosings = betAmount;
-			accSys.SetBalance(playerLosings, isWin, playerChipBal);
+			accSys.SetBalance(playerLosings, isWin, playerChipBal, playerUserName, playerPassCode);
 		}
 		else if (dealerCurrentCount == playerCurrentCount)
 		{
@@ -154,13 +156,13 @@ void Game::winningLogic(bool isBustPlayer, bool isBustDealer, int betAmount, boo
 		{
 			cout << "You have lost via a bust\n" << endl;
 			playerLosings = betAmount;
-			accSys.SetBalance(playerLosings, isWin, playerChipBal);
+			accSys.SetBalance(playerLosings, isWin, playerChipBal, playerUserName, playerPassCode);
 		}
 		else if (isBustDealer)
 		{
 			cout << "You have won via the dealer going bust\n" << endl;
 			playerWinnings = betAmount;
-			accSys.SetBalance(playerLosings, isWin, playerChipBal);
+			accSys.SetBalance(playerLosings, isWin, playerChipBal, playerUserName, playerPassCode);
 		}
 	}
 	else if (playerCurrentCount > dealerCurrentCount && isBustPlayer == false)
@@ -168,13 +170,13 @@ void Game::winningLogic(bool isBustPlayer, bool isBustDealer, int betAmount, boo
 		isWin = true;
 		playerWinnings = betAmount * 2;
 		cout << "Player has won!\n You have won " << playerWinnings << " chips congratulations" << "\n" << endl;
-		accSys.SetBalance(playerLosings, isWin, playerChipBal);
+		accSys.SetBalance(playerLosings, isWin, playerChipBal, playerUserName, playerPassCode);
 	}
 	else if (playerCurrentCount < dealerCurrentCount && isBustPlayer == false && isBustDealer == false)
 	{
 		playerLosings = betAmount;
 		cout << "The dealer has beat you!\n" << endl;
-		accSys.SetBalance(playerLosings, isWin, playerChipBal);
+		accSys.SetBalance(playerLosings, isWin, playerChipBal, playerUserName, playerPassCode);
 	}
 	else if (dealerCurrentCount == playerCurrentCount)
 	{
@@ -184,13 +186,13 @@ void Game::winningLogic(bool isBustPlayer, bool isBustDealer, int betAmount, boo
 	{
 		cout << "You have lost via a bust\n" << endl;
 		playerLosings = betAmount;
-		accSys.SetBalance(playerLosings, isWin, playerChipBal);
+		accSys.SetBalance(playerLosings, isWin, playerChipBal, playerUserName, playerPassCode);
 	}
 	else if (isBustDealer)
 	{
 		cout << "You have won via the dealer going bust\n" << endl;
 		playerWinnings = betAmount;
-		accSys.SetBalance(playerLosings, isWin, playerChipBal);
+		accSys.SetBalance(playerLosings, isWin, playerChipBal, playerUserName, playerPassCode);
 	}
 }
 int Game::playerDecisionDouble()
@@ -403,9 +405,9 @@ void Game::reshuffleCards()
 	defineDeck();
 }
 
-void Game::startGame(string username, int chipBal)
+void Game::startGame(string username, int chipBal, int passCode)
 {
-	string playerUserName;
+	playerPassCode = passCode;
 	playerUserName = username;
 	playerChipBal = chipBal;
 	defineDeck();
