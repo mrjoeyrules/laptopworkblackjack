@@ -16,10 +16,10 @@ int const MaxCardsPerDeck = 13;
 int const MaxCardsPerDeckAce = 14;
 int const MaxDecks = 4;
 int const Maxsuits = 4;
-int totalOfCardsDeck1 = 13;
-int totalOfCardsDeck2 = 13;
-int totalOfCardsDeck3 = 13;
-int totalOfCardsDeck4 = 13;
+int totalOfCardsDeck1 = 14;
+int totalOfCardsDeck2 = 14;
+int totalOfCardsDeck3 = 14;
+int totalOfCardsDeck4 = 14;
 int playerChipBal = 0;
 int cardValue[MaxCardsPerDeckAce] = { 1,2,3,4,5,6,7,8,9,10,10,10,10,11 };
 string suits[Maxsuits] = { "Hearts", "Diamonds", "Clubs", "Spades" };
@@ -45,54 +45,82 @@ void Game::defineDeck()
 
 int Game::dealCards()
 {
+	Validation validate;
 	srand(time(0));
 	int cardValueInner = 0;
 	int currentDeck = 0;
 	bool loopControl = true;
 	int randomDeck = 0;
 	int randomCard = 0;
-	int currentCard = 0;
 	while (loopControl)
 	{
 		randomDeck = rand() % 4;
 		if (randomDeck == 0)
 		{
 			randomCard = rand() % totalOfCardsDeck1;
+			cardValueInner = cardValue[randomCard + 1];
 		}
 		else if (randomDeck == 1)
 		{
 			randomCard = rand() % totalOfCardsDeck2;
+			cardValueInner = cardValue[randomCard + 1];
 		}
 		else if (randomDeck == 2)
 		{
 			randomCard = rand() % totalOfCardsDeck3;
+			cardValueInner = cardValue[randomCard + 1];
 		}
 		else if (randomDeck == 3)
 		{
-		randomCard = rand() % totalOfCardsDeck4;
+			randomCard = rand() % totalOfCardsDeck4;
+			cardValueInner = cardValue[randomCard + 1];
 		}
-		cardValueInner = cardValue[randomCard + 1];
-		currentDeck = randomDeck;
-		currentCard = randomCard;
-		if (currentDeck == 0)
+		if (randomCard == 0)
 		{
-			totalOfCardsDeck1 -= 1;
+			bool aceCheck = true;
+			while (aceCheck)
+			{
+				int aceChoice = 0;
+				aceChoice = validate.intValidation("You have drawn an ace do you want it to be worth 1: 11 or 2: 1? \n");
+				if (aceChoice == 1)
+				{
+					cardValueInner = cardValue[13];
+					aceCheck = false;
+				}
+				else if (aceChoice == 2)
+				{
+					cardValueInner = cardValue[0];
+					aceCheck = false;
+				}
+				else
+				{
+					cout << "You need to enter a number between 1 and 2!\n" << endl;
+				}
+			}
 		}
-		else if (currentDeck == 1)
+		else
 		{
-			totalOfCardsDeck2 -= 1;
+			currentDeck = randomDeck;
+			if (currentDeck == 0)
+			{
+				totalOfCardsDeck1 -= 1;
+			}
+			else if (currentDeck == 1)
+			{
+				totalOfCardsDeck2 -= 1;
+			}
+			else if (currentDeck == 2)
+			{
+				totalOfCardsDeck3 -= 1;
+			}
+			else if (currentDeck == 3)
+			{
+				totalOfCardsDeck4 -= 1;
+			}
+			currentSuit = currentDeck;
+			return cardValueInner;
+			loopControl = false;
 		}
-		else if (currentDeck == 2)
-		{
-			totalOfCardsDeck3 -= 1;
-		}
-		else if (currentDeck == 3)
-		{
-			totalOfCardsDeck4 -= 1;
-		}
-		currentSuit = currentDeck;
-		return cardValueInner;
-		loopControl = false;
 	}
 	return 0;
 }
