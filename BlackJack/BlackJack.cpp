@@ -1,14 +1,7 @@
-#include <iostream>
-#include <string>
-#include <fstream>
-#include "Validation.h"
-#include "AccountSystem.h"
 #include "MainMenu.h"
-#include "CustomMath.h"
-using namespace std;
-
 int main()
 {
+    /*Instantiates MainMenu class and allows for mainMenu method to be called*/
     MainMenu mm;
     mm.mainMenu();
 }

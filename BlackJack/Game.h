@@ -24,6 +24,7 @@ private:
 	int playerDecisionDouble();
 	void winningLogic(bool isBustPlayer, bool isBustDealer, int betAmount, bool isBlackJack, bool isDealerBlackJack, bool isDoubleDown);
 	void dealerPlayRound(bool isBustPlayer, int betAmount, bool isBlackJack, bool isDoubleDown);
+	void newRound();
 public:
 	void startGame(string username, int chipBal, int passCode);
 };

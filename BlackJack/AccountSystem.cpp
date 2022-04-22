@@ -9,6 +9,8 @@
 #include "MainMenu.h"
 #include "Game.h"
 using namespace std;
+
+// A struct to keep individual elements of the users data
 struct Account
 {
 	string username;
@@ -16,46 +18,46 @@ struct Account
 	int chipBalance = 0000;
 };
 
-void AccountSystem::LogIn()
+void AccountSystem::LogIn() // log in function
 {
-	ifstream accountFile("AccountInfo.txt");
+	ifstream accountFile("AccountInfo.txt"); // opens account info text file
 	Game game;
-	Validation val;
+	Validation val; // instatiates game and validation classes
 	string attemptedUsername;
 	int attemptedPasscode;
 	bool loopControl = true;
 	int count = 0;
-	if (accountFile.is_open())
+	if (accountFile.is_open()) // if the file is open run code
 	{
 		string line;
-		while (!accountFile.eof())
+		while (!accountFile.eof()) // while not at end of file
 		{
-			getline(accountFile, line);
-			count++;
+			getline(accountFile, line); // get the line from the file and store line in variable line
+			count++; // + 1 to line count
 		}
 	}
-	accountFile.close();
-	ifstream accountFile2("AccountInfo.txt");
-	std::vector<Account> accounts;
+	accountFile.close(); // close the file to reset
+	ifstream accountFile2("AccountInfo.txt"); // re open to reset
+	std::vector<Account> accounts; // vector of the Struct Account
 	while (loopControl)
 	{
-		if (!accountFile2)
+		if (!accountFile2) // if the file doesnt exist big error
 		{
 			cout << "The file in question does not exist \n";
 			loopControl = false;
 		}
-		for (size_t i = 0; i < count; i++)
+		for (size_t i = 0; i < count; i++) // Instatiate a new struct and store each seperated value as a part of said struct
 		{
 			Account account;
 			accountFile2 >> account.username >> account.passcode >> account.chipBalance;
-			accounts.push_back(account);
+			accounts.push_back(account); // push the struct into the Vector - A vector is an array with a non specific storage limit
 		}
 		int logInAttempts = 0;
 		int logInMax = 5;
 		bool loopControl2 = true;
 		while (loopControl2)
 		{
-			if (logInAttempts == logInMax)
+			if (logInAttempts == logInMax) // if the user has too many attempts at password kick them out
 			{
 				cout << "You have been locked out for too many failed attempts try again later" << endl;
 				loopControl = false;
@@ -64,13 +66,13 @@ void AccountSystem::LogIn()
 			else
 			{
 				cout << "Please Enter your Username: \n";
-				cin >> attemptedUsername;
-				attemptedPasscode = val.intValidation("Please Enter your Passcode:");
+				cin >> attemptedUsername; // enter user name
+				attemptedPasscode = val.intValidation("Please Enter your Passcode:"); // enter passcode
 				int z = 0;
 				bool isCorrect = false;
 				while (z < count)
 				{
-					if (attemptedUsername == accounts[z].username && attemptedPasscode == accounts[z].passcode)
+					if (attemptedUsername == accounts[z].username && attemptedPasscode == accounts[z].passcode) // if username and password are a match to anything in the vector log them in
 					{
 						cout << "Welcome to the casino {" << attemptedUsername << "}!" << endl;
 						loopControl2 = false;
@@ -80,14 +82,14 @@ void AccountSystem::LogIn()
 					}
 					else
 					{
-						z++;
+						z++; // if current struct isnt the right one in the vector go to the next one
 					}
 				}
-				if (isCorrect == true)
+				if (isCorrect == true) // if correct flag is true take user to the game
 				{
 					game.startGame(accounts[z].username, accounts[z].chipBalance, accounts[z].passcode);
 				}
-				else
+				else // if username or password incorrect, add to log in attempts and try again
 				{
 					logInAttempts++;
 					cout << "Username or password is incorrect try again" << endl;
@@ -105,10 +107,10 @@ void AccountSystem::AccountCreator()
 {
 	MainMenu mm;
 	CustomMath cusMath;
-	Validation val;
-	ifstream accountFile("AccountInfo.txt");
+	Validation val; // instatiate main menu, custom math, and validation
+	ifstream accountFile("AccountInfo.txt"); // open account file
 	int count = 0;
-	if (accountFile.is_open())
+	if (accountFile.is_open()) // count lines of file
 	{
 		string line;
 		while (!accountFile.eof())
@@ -118,32 +120,32 @@ void AccountSystem::AccountCreator()
 		}
 	}
 	accountFile.close();
-	ifstream accountFile2("AccountInfo.txt");
-	std::vector<Account> preAccounts;
-	Account account;
+	ifstream accountFile2("AccountInfo.txt"); // reopen to reset
+	std::vector<Account> preAccounts; // vector of struct again
+	Account account; // instatiate struct
 	for (size_t i = 0; i < count; i++)
 	{
 		accountFile2 >> account.username >> account.passcode >> account.chipBalance;
-		preAccounts.push_back(account);
+		preAccounts.push_back(account); // take info and store same as before
 	}
 	accountFile2.close();
-	int const passcodeLenReq = 4;
+	int const passcodeLenReq = 4; // pass code length must be 4 digits
 	bool loopControl = true;
-	cout << "Welcome to the account creation center!" << endl;
+	cout << "Welcome to the account creation center!" << endl; // welcome message
 	string newUsername;
 	int newPasscode;
 	while (loopControl)
 	{
 		int innerCount = count;
 		cout << "The first step of creating an account is to choose a username!" << endl;
-		cout << "Please enter a username: \n";
+		cout << "Please enter a username: \n"; // new username
 		cin >> newUsername;
 		bool passCodeLoop = true;
 		while (passCodeLoop)
 		{
-			newPasscode = val.intValidation("Please enter a new passcode! Your passcode must be 4 digits long:\n");
-			int passcodeLen = cusMath.countDigit(newPasscode);
-			if (passcodeLen != passcodeLenReq)
+			newPasscode = val.intValidation("Please enter a new passcode! Your passcode must be 4 digits long:\n"); // enter a number
+			int passcodeLen = cusMath.countDigit(newPasscode); // check if number is 4 digits long
+			if (passcodeLen != passcodeLenReq) // if not it must be 4 long
 			{
 				cout << "Your passcode must be " << passcodeLenReq << " digits long! Please try again" << endl;
 			}
@@ -155,7 +157,7 @@ void AccountSystem::AccountCreator()
 		bool isFail = false;
 		for (size_t i = 0; i < innerCount; i++)
 		{
-			if (newUsername == preAccounts[i].username)
+			if (newUsername == preAccounts[i].username) // check is username is already in use. 
 			{
 				cout << "You cannot use this username as it is already in use, Please try again!" << endl;
 				i = innerCount;
@@ -175,21 +177,21 @@ void AccountSystem::AccountCreator()
 			loopControl = false;
 		}
 	}
-	int baseBalance = 25000;
-	ofstream fileOutput;
-	fileOutput.open("AccountInfo.txt", std::ios_base::app);
-	fileOutput << "\n" << newUsername << " " << newPasscode << " " << baseBalance;
-	cout << "Account created enjoy! Please log in with your details!" << endl;
-	mm.mainMenu();
+	int baseBalance = 25000; // starting balance is 25000
+	ofstream fileOutput; 
+	fileOutput.open("AccountInfo.txt", std::ios_base::app); // open text file in append mode to add to file but not rewrite
+	fileOutput << "\n" << newUsername << " " << newPasscode << " " << baseBalance; // write to a clean new line
+	cout << "Account created enjoy! Please log in with your details!" << endl; 
+	mm.mainMenu(); // back to main menu
 }
 
-void AccountSystem::SetBalance(int balanceChange, bool isWin, int playerBal, string playerUserName, int playerPassCode)
+void AccountSystem::SetBalance(int balanceChange, bool isWin, int playerBal, string playerUserName, int playerPassCode) // function to set a new balance after playing a round
 {
-	if (isWin)
+	if (isWin) // if player wins add winnings to balance
 	{
 		playerBal = playerBal + balanceChange;
 	}
-	else if (isWin == false)
+	else if (isWin == false) // if player loses take loseings from balance
 	{
 		playerBal = playerBal - balanceChange;
 	}
@@ -200,7 +202,7 @@ void AccountSystem::SetBalance(int balanceChange, bool isWin, int playerBal, str
 	if (accountFile3.is_open())
 	{
 		string line;
-		while (!accountFile3.eof())
+		while (!accountFile3.eof()) // counts lines
 		{
 			getline(accountFile3, line);
 			count++;
@@ -209,7 +211,7 @@ void AccountSystem::SetBalance(int balanceChange, bool isWin, int playerBal, str
 	cout << count << endl;
 	accountFile3.close();
 
-	ifstream accFile("AccountInfo.txt");
+	ifstream accFile("AccountInfo.txt"); // stores data in a struct and vector
 	std::vector<Account> accounts2;
 	Account account2;
 	for (size_t p = 0; p < count; p++)
@@ -220,7 +222,7 @@ void AccountSystem::SetBalance(int balanceChange, bool isWin, int playerBal, str
 	}
 	accFile.close();
 	ifstream accFile2("AccountInfo.txt");
-	string search = playerUserName;
+	string search = playerUserName; // search for the current logged in users username
 	string line2;
 	int whereLine = 0;
 	size_t pos;
@@ -241,26 +243,26 @@ void AccountSystem::SetBalance(int balanceChange, bool isWin, int playerBal, str
 	}
 	accFile.close();
 	ofstream accFileWrite;
-	accFileWrite.open("AccountInfo.txt", std::ios_base::trunc);
+	accFileWrite.open("AccountInfo.txt", std::ios_base::trunc); // open file in rewrite mode
 	for (size_t i = 0; i < count; i++)
 	{
-		if (i == pos)
+		if (i == pos) // if current line is old current users line
 		{
-			if (i == 0)
+			if (i == 0) // checks if the users data was stored on the top line
 			{
-				accFileWrite << playerUserName << " " << playerPassCode << " " << playerBal;
+				accFileWrite << playerUserName << " " << playerPassCode << " " << playerBal; // update new balance and all other data
 			}
 			else
 			{
-				accFileWrite << "\n" << playerUserName << " " << playerPassCode << " " << playerBal;
+				accFileWrite << "\n" << playerUserName << " " << playerPassCode << " " << playerBal; // if it is not the top line of file add a new line
 			}
 			
 		}
 		else
 		{
-			if (i == 0)
+			if (i == 0) // if the current line isnt the users then rewrite all other data to file
 			{
-				accFileWrite << accounts2[i].username << " " << accounts2[i].passcode << " " << accounts2[i].chipBalance;
+				accFileWrite << accounts2[i].username << " " << accounts2[i].passcode << " " << accounts2[i].chipBalance; // checks for top line for formmating
 			}
 			else
 			{
@@ -269,5 +271,5 @@ void AccountSystem::SetBalance(int balanceChange, bool isWin, int playerBal, str
 		}
 	}
 	accFileWrite.close();
-	cout << "File saving done" << endl;
+	cout << "File saving done" << endl; // file saving complete
 }

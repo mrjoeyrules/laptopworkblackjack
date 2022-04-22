@@ -1,7 +1,6 @@
 #include "CustomMath.h"
-#include <string>
 using namespace std;
-int CustomMath::countDigit(int number)
+int CustomMath::countDigit(int number) // function to count how many digits are in a number.
 {
 	int count = 0;
 	while (number != 0)
