@@ -5,6 +5,7 @@
 #include "Validation.h"
 #include "MainMenu.h"
 #include <time.h>
+#include <ctime>
 #include <Windows.h>
 #include "AccountSystem.h"
 using namespace std;
@@ -76,7 +77,7 @@ void Game::newRound() // function to decide to start a new round or end game
 int Game::dealCards()
 {
 	Validation validate; // instatiate validation
-	srand(time(0));
+	srand((int)time(0));
 	int cardValueInner = 0;
 	int currentDeck = 0;
 	bool loopControl = true;
