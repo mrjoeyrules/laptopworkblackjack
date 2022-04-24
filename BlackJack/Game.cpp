@@ -26,6 +26,7 @@ int cardValue[MaxCardsPerDeckAce] = { 1,2,3,4,5,6,7,8,9,10,10,10,10,11 };
 string suits[Maxsuits] = { "Hearts", "Diamonds", "Clubs", "Spades" };
 int currentSuit;
 int cardCount = 0;
+int zVal = 0;
 string playerUserName;
 
 // struct of decks
@@ -63,8 +64,8 @@ void Game::newRound() // function to decide to start a new round or end game
 		}
 		else if (againAns == 2) // if not, cya 
 		{
-			cout << "Logging You out of the casino, Good night!\n" << endl;
 			againControl = false;
+			cout << "Logging You out of the casino, Good night!\n" << endl;
 		}
 		else
 		{
@@ -106,52 +107,27 @@ int Game::dealCards()
 			randomCard = rand() % totalOfCardsDeck4;
 			cardValueInner = cardValue[randomCard + 1];
 		}
-		if (randomCard == 0) // if the card is an ace
+
+		currentDeck = randomDeck; // takes away 1 card from the total of what ever take was chosen
+		if (currentDeck == 0)
 		{
-			bool aceCheck = true;
-			while (aceCheck)
-			{
-				int aceChoice = 0;
-				aceChoice = validate.intValidation("You have drawn an ace do you want it to be worth 1: 11 or 2: 1? \n"); // do you want the ace to be an 11 or 1
-				if (aceChoice == 1)
-				{
-					cardValueInner = cardValue[13];
-					aceCheck = false;
-				}
-				else if (aceChoice == 2)
-				{
-					cardValueInner = cardValue[0];
-					aceCheck = false;
-				}
-				else
-				{
-					cout << "You need to enter a number between 1 and 2!\n" << endl;
-				}
-			}
+			totalOfCardsDeck1 -= 1;
 		}
-		else
+		else if (currentDeck == 1)
 		{
-			currentDeck = randomDeck; // takes away 1 card from the total of what ever take was chosen
-			if (currentDeck == 0)
-			{
-				totalOfCardsDeck1 -= 1;
-			}
-			else if (currentDeck == 1)
-			{
-				totalOfCardsDeck2 -= 1;
-			}
-			else if (currentDeck == 2)
-			{
-				totalOfCardsDeck3 -= 1;
-			}
-			else if (currentDeck == 3)
-			{
-				totalOfCardsDeck4 -= 1;
-			}
-			currentSuit = currentDeck; // stores the suit number
-			return cardValueInner; // returns card value for maths
-			loopControl = false;
+			totalOfCardsDeck2 -= 1;
 		}
+		else if (currentDeck == 2)
+		{
+			totalOfCardsDeck3 -= 1;
+		}
+		else if (currentDeck == 3)
+		{
+			totalOfCardsDeck4 -= 1;
+		}
+		currentSuit = currentDeck; // stores the suit number
+		return cardValueInner; // returns card value for maths
+		loopControl = false;
 	}
 	return 0;
 }
@@ -189,7 +165,7 @@ void Game::winningLogic(bool isBustPlayer, bool isBustDealer, int betAmount, boo
 	{
 		isWin = true; // sets win flag to true to make sure to add the winnings to total
 		playerWinnings = betAmount * 2.5;
-		accSys.SetBalance(playerWinnings, isWin, playerChipBal, playerUserName, playerPassCode); // calls function to set balance of user
+		accSys.SetBalance(playerWinnings, isWin, playerChipBal, playerUserName, playerPassCode, zVal); // calls function to set balance of user
 	}
 	else if (isDoubleDown) // if the user doubled down
 	{
@@ -198,14 +174,14 @@ void Game::winningLogic(bool isBustPlayer, bool isBustDealer, int betAmount, boo
 			isWin = true;
 			cout << "You have won a double down Congratulations! \n" << endl;
 			playerWinnings = betAmount * 2; // doubles winnings
-			accSys.SetBalance(playerLosings, isWin, playerChipBal, playerUserName, playerPassCode);
+			accSys.SetBalance(playerLosings, isWin, playerChipBal, playerUserName, playerPassCode, zVal);
 			newRound(); // starts a new round
 		}
 		else if (dealerCurrentCount > playerCurrentCount && isBustDealer) // if dealer won
 		{
 			cout << "You have lost a double down Too Bad! \n" << endl;
 			playerLosings = betAmount; // loses entire bet as bet is set to double earlier
-			accSys.SetBalance(playerLosings, isWin, playerChipBal, playerUserName, playerPassCode);
+			accSys.SetBalance(playerLosings, isWin, playerChipBal, playerUserName, playerPassCode, zVal);
 			newRound();
 		}
 		else if (dealerCurrentCount == playerCurrentCount) // if the cards are the same player keeps bet
@@ -217,14 +193,14 @@ void Game::winningLogic(bool isBustPlayer, bool isBustDealer, int betAmount, boo
 		{
 			cout << "You have lost via a bust\n" << endl;
 			playerLosings = betAmount;
-			accSys.SetBalance(playerLosings, isWin, playerChipBal, playerUserName, playerPassCode);
+			accSys.SetBalance(playerLosings, isWin, playerChipBal, playerUserName, playerPassCode, zVal);
 			newRound();
 		}
 		else if (isBustDealer) // if dealer busts
 		{
 			cout << "You have won via the dealer going bust\n" << endl;
 			playerWinnings = betAmount;
-			accSys.SetBalance(playerLosings, isWin, playerChipBal, playerUserName, playerPassCode);
+			accSys.SetBalance(playerLosings, isWin, playerChipBal, playerUserName, playerPassCode, zVal);
 			newRound();
 		}
 	}
@@ -233,14 +209,14 @@ void Game::winningLogic(bool isBustPlayer, bool isBustDealer, int betAmount, boo
 		isWin = true;
 		playerWinnings = betAmount * 2; // player gets double the bet
 		cout << "Player has won!\nYou have won " << playerWinnings << " chips congratulations" << "\n" << endl;
-		accSys.SetBalance(playerLosings, isWin, playerChipBal, playerUserName, playerPassCode);
+		accSys.SetBalance(playerLosings, isWin, playerChipBal, playerUserName, playerPassCode, zVal);
 		newRound();
 	}
 	else if (playerCurrentCount < dealerCurrentCount && isBustPlayer == false && isBustDealer == false) // if the dealer wins and no ones bust
 	{
 		playerLosings = betAmount; // losing is the bet amount
 		cout << "The dealer has beat you!\n" << endl;
-		accSys.SetBalance(playerLosings, isWin, playerChipBal, playerUserName, playerPassCode);
+		accSys.SetBalance(playerLosings, isWin, playerChipBal, playerUserName, playerPassCode, zVal);
 		newRound();
 	}
 	else if (dealerCurrentCount == playerCurrentCount) // if cards are the same you push dont lose anything
@@ -252,14 +228,15 @@ void Game::winningLogic(bool isBustPlayer, bool isBustDealer, int betAmount, boo
 	{
 		cout << "You have lost via a bust\n" << endl;
 		playerLosings = betAmount;
-		accSys.SetBalance(playerLosings, isWin, playerChipBal, playerUserName, playerPassCode);
+		accSys.SetBalance(playerLosings, isWin, playerChipBal, playerUserName, playerPassCode, zVal);
 		newRound();
 	}
 	else if (isBustDealer) // if dealer busts
 	{
+		isWin = true;
 		cout << "You have won via the dealer going bust\n" << endl;
 		playerWinnings = betAmount;
-		accSys.SetBalance(playerLosings, isWin, playerChipBal, playerUserName, playerPassCode);
+		accSys.SetBalance(playerLosings, isWin, playerChipBal, playerUserName, playerPassCode, zVal);
 		newRound();
 	}
 }
@@ -295,18 +272,60 @@ int Game::playerDecisionDouble() // a simple decision like before but for if the
 
 void Game::playerRound() // deals the cards to the player and tells them what they have
 {
+	Validation validate;
 	int currentPlayerCard = 0;
 	currentPlayerCard = dealCards(); // deals the cards
-	int currentCardSuit = 0;
-	currentCardSuit = currentSuit;
-	playerCurrentCount += cardValue[currentPlayerCard]; // adds to players count
-	string cardValueName = deckMaker[currentCardSuit].decks[currentPlayerCard]; //cards value in text form
-	string currentSuit = suits[currentCardSuit]; // cards suit in text form
+	if (currentPlayerCard == 0)
+	{
+		int currentCardSuit = 0;
+		currentCardSuit = currentSuit;
+		string currentSuit = suits[currentCardSuit]; // cards suit in text form
+		bool aceCheck = true;
+		while (aceCheck)
+		{
+			int aceChoice = 0;
+			aceChoice = validate.intValidation("You have drawn an ace do you want it to be worth 1: 11 or 2: 1? \n"); // do you want the ace to be an 11 or 1
+			if (aceChoice == 1)
+			{
+				currentPlayerCard = cardValue[13];
+				string cardValueName = deckMaker[currentCardSuit].decks[13]; //cards value in text form
+				cout << "You have been dealt a " << cardValueName << " of " << currentSuit << "\n" << endl;
+				Sleep(2000); // slows the outputs by 2 seconds to allow for better astetics
+				playerCurrentCount += cardValue[13]; // adds to players count
+				aceCheck = false;
+			}
+			else if (aceChoice == 2)
+			{
+				currentPlayerCard = cardValue[0];
+				string cardValueName = deckMaker[currentCardSuit].decks[0];
+				cout << "You have been dealt a " << cardValueName << " of " << currentSuit << "\n" << endl;
+				Sleep(2000); // slows the outputs by 2 seconds to allow for better astetics
+				playerCurrentCount += cardValue[0]; // adds to players count
+				aceCheck = false;
+			}
+			else
+			{
+				cout << "You need to enter a number between 1 and 2!\n" << endl;
+			}
+		}
+		cout << "Your count is " << playerCurrentCount << "\n" << endl;
+		Sleep(2000);
+		
+	}
+	else
+	{
+		int currentCardSuit = 0;
+		currentCardSuit = currentSuit;
+		playerCurrentCount += cardValue[currentPlayerCard]; // adds to players count
+		string cardValueName = deckMaker[currentCardSuit].decks[currentPlayerCard]; //cards value in text form
+		string currentSuit = suits[currentCardSuit]; // cards suit in text form
+
+		cout << "You have been dealt a " << cardValueName << " of " << currentSuit << "\n" << endl;
+		Sleep(2000); // slows the outputs by 2 seconds to allow for better astetics
+		cout << "Your count is " << playerCurrentCount << "\n" << endl;
+		Sleep(2000);
+	}
 	
-	cout << "You have been dealt a " << cardValueName << " of " << currentSuit << "\n" << endl;
-	Sleep(2000); // slows the outputs by 2 seconds to allow for better astetics
-	cout << "Your count is " << playerCurrentCount << "\n" << endl;
-	Sleep(2000);
 }
 void Game::dealerRound() // same as player round but for dealers cards
 {
@@ -429,14 +448,23 @@ void Game::playRound() // starts the players turns and game
 					else
 					{
 						int playerDecisionReturn = playerDecision(); // if not you play normally
-						if (playerDecisionReturn == 1) // hit = draw
+						if (playerCurrentCount > 21)
 						{
-							playerRound();
-
-						}
-						else if (playerDecisionReturn == 2) // stick = stick
-						{
+							bust = true;
 							isStuck = true;
+							cout << "You have gone Bust" << endl;
+						}
+						else
+						{
+							if (playerDecisionReturn == 1) // hit = draw
+							{
+								playerRound();
+
+							}
+							else if (playerDecisionReturn == 2) // stick = stick
+							{
+								isStuck = true;
+							}
 						}
 					}
 				}
@@ -484,11 +512,12 @@ void Game::reshuffleCards() // reshuffle the cards, all cards are back in the de
 	defineDeck();
 }
 
-void Game::startGame(string username, int chipBal, int passCode) // starts the game, the only public function here
+void Game::startGame(string username, int chipBal, int passCode, int z) // starts the game, the only public function here
 {
 	playerPassCode = passCode; // takes info from account system for passing later
 	playerUserName = username;
 	playerChipBal = chipBal;
+	zVal = z;
 	defineDeck(); // defines the deck
 	playRound(); // plays the round
 }

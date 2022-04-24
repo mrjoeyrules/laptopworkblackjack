@@ -27,7 +27,8 @@ void MainMenu::mainMenu()
         }
         else if (menuChoice == menuChoices[1]) // if user enters 2
         {
-            accSys.AccountCreator(); // user goes to account creation function - No loopcontrol false because once the account is created the user needs to log in.
+            accSys.AccountCreator(); // user goes to account creation function
+            loopControl = false;
         }
         else if (menuChoice == menuChoices[2])
         {

@@ -1,3 +1,2 @@
 DevAcc 6562 99999
-MrJoeyRules 2345 25000
-Aidnn_ 1356 25000
+MrJoeyRules 2345 15000

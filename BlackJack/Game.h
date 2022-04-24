@@ -27,6 +27,6 @@ private:
 	void dealerPlayRound(bool isBustPlayer, int betAmount, bool isBlackJack, bool isDoubleDown);
 	void newRound();
 public:
-	void startGame(string username, int chipBal, int passCode);
+	void startGame(string username, int chipBal, int passCode, int z);
 };
 #endif

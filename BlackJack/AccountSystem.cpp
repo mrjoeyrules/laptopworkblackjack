@@ -87,7 +87,7 @@ void AccountSystem::LogIn() // log in function
 				}
 				if (isCorrect == true) // if correct flag is true take user to the game
 				{
-					game.startGame(accounts[z].username, accounts[z].chipBalance, accounts[z].passcode);
+					game.startGame(accounts[z].username, accounts[z].chipBalance, accounts[z].passcode, z);
 				}
 				else // if username or password incorrect, add to log in attempts and try again
 				{
@@ -181,11 +181,11 @@ void AccountSystem::AccountCreator()
 	ofstream fileOutput; 
 	fileOutput.open("AccountInfo.txt", std::ios_base::app); // open text file in append mode to add to file but not rewrite
 	fileOutput << "\n" << newUsername << " " << newPasscode << " " << baseBalance; // write to a clean new line
-	cout << "Account created enjoy! Please log in with your details!" << endl; 
-	mm.mainMenu(); // back to main menu
+	cout << "Account created enjoy! Please log in with your details!" << endl;
+	cout << "The program needs to shutdown to properly configure the account. Please restart the program and log in!" << endl;
 }
 
-void AccountSystem::SetBalance(int balanceChange, bool isWin, int playerBal, string playerUserName, int playerPassCode) // function to set a new balance after playing a round
+void AccountSystem::SetBalance(int balanceChange, bool isWin, int playerBal, string playerUserName, int playerPassCode, int z) // function to set a new balance after playing a round
 {
 	if (isWin) // if player wins add winnings to balance
 	{
@@ -208,7 +208,6 @@ void AccountSystem::SetBalance(int balanceChange, bool isWin, int playerBal, str
 			count++;
 		}
 	}
-	cout << count << endl;
 	accountFile3.close();
 
 	ifstream accFile("AccountInfo.txt"); // stores data in a struct and vector
@@ -221,32 +220,11 @@ void AccountSystem::SetBalance(int balanceChange, bool isWin, int playerBal, str
 		accounts2.push_back(account2);
 	}
 	accFile.close();
-	ifstream accFile2("AccountInfo.txt");
-	string search = playerUserName; // search for the current logged in users username
-	string line2;
-	int whereLine = 0;
-	size_t pos;
-	while (!accFile2.eof())
-	{
-		while (accFile2.good())
-		{
-			getline(accFile2, line2); // get line from file
-			pos = line2.find(search); // search
-			if (pos != string::npos) // string::npos is returned if string is not found
-			{
-				cout << "Found!";
-				cout << pos << endl;
-				break;
-			}
-		}
-		break;
-	}
-	accFile.close();
 	ofstream accFileWrite;
 	accFileWrite.open("AccountInfo.txt", std::ios_base::trunc); // open file in rewrite mode
 	for (size_t i = 0; i < count; i++)
 	{
-		if (i == pos) // if current line is old current users line
+		if (i == z) // if current line is old current users line
 		{
 			if (i == 0) // checks if the users data was stored on the top line
 			{
