@@ -122,9 +122,9 @@ void AccountSystem::AccountCreator()
 	accountFile.close();
 	ifstream accountFile2("AccountInfo.txt"); // reopen to reset
 	std::vector<Account> preAccounts; // vector of struct again
-	Account account; // instatiate struct
 	for (size_t i = 0; i < count; i++)
 	{
+		Account account; // instatiate struct
 		accountFile2 >> account.username >> account.passcode >> account.chipBalance;
 		preAccounts.push_back(account); // take info and store same as before
 	}

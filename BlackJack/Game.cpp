@@ -174,7 +174,7 @@ void Game::winningLogic(bool isBustPlayer, bool isBustDealer, int betAmount, boo
 			isWin = true;
 			cout << "You have won a double down Congratulations! \n" << endl;
 			playerWinnings = betAmount * 2; // doubles winnings
-			accSys.SetBalance(playerLosings, isWin, playerChipBal, playerUserName, playerPassCode, zVal);
+			accSys.SetBalance(playerWinnings, isWin, playerChipBal, playerUserName, playerPassCode, zVal);
 			newRound(); // starts a new round
 		}
 		else if (dealerCurrentCount > playerCurrentCount && isBustDealer) // if dealer won
@@ -198,18 +198,19 @@ void Game::winningLogic(bool isBustPlayer, bool isBustDealer, int betAmount, boo
 		}
 		else if (isBustDealer) // if dealer busts
 		{
+			isWin = true;
 			cout << "You have won via the dealer going bust\n" << endl;
 			playerWinnings = betAmount;
-			accSys.SetBalance(playerLosings, isWin, playerChipBal, playerUserName, playerPassCode, zVal);
+			accSys.SetBalance(playerWinnings, isWin, playerChipBal, playerUserName, playerPassCode, zVal);
 			newRound();
 		}
 	}
 	else if (playerCurrentCount > dealerCurrentCount && isBustPlayer == false) // if double down doesnt happen these occur, If player beats dealer and isnt bust then
 	{
 		isWin = true;
-		playerWinnings = betAmount * 2; // player gets double the bet
+		playerWinnings = betAmount; // player gets double the bet
 		cout << "Player has won!\nYou have won " << playerWinnings << " chips congratulations" << "\n" << endl;
-		accSys.SetBalance(playerLosings, isWin, playerChipBal, playerUserName, playerPassCode, zVal);
+		accSys.SetBalance(playerWinnings, isWin, playerChipBal, playerUserName, playerPassCode, zVal);
 		newRound();
 	}
 	else if (playerCurrentCount < dealerCurrentCount && isBustPlayer == false && isBustDealer == false) // if the dealer wins and no ones bust
@@ -236,7 +237,7 @@ void Game::winningLogic(bool isBustPlayer, bool isBustDealer, int betAmount, boo
 		isWin = true;
 		cout << "You have won via the dealer going bust\n" << endl;
 		playerWinnings = betAmount;
-		accSys.SetBalance(playerLosings, isWin, playerChipBal, playerUserName, playerPassCode, zVal);
+		accSys.SetBalance(playerWinnings, isWin, playerChipBal, playerUserName, playerPassCode, zVal);
 		newRound();
 	}
 }
